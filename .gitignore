@@ -1,0 +1,10 @@
+# Letsencrypt
+apps/letsencrypt/acme.json
+
+# Traefik
+apps/traefik/traefik.yaml
+apps/main.py
+.env
+
+# Apps
+apps/whoami/whoami.yaml
