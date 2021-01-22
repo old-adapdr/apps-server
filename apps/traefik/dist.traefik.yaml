@@ -1,0 +1,33 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+api:
+  dashboard: true
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+pilot:
+    token: ""
+
+providers:
+  docker:
+    network: proxy
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: me@alexpdr.dev
+      storage: acme.json
+      httpChallenge:
+        entryPoint: http
+
+log:
+  filePath: "/home/ap/hs/apps/traefik/traefik.log"
+
+accessLog:
+  filePath: "/home/ap/hs/apps/traefik/access.log"
