@@ -18,7 +18,7 @@ services:
       - "traefik.http.routers.drone.tls=true"
       - "traefik.http.routers.drone.entrypoints=https"
       - "traefik.http.routers.drone.rule=Host(`drone.hs.alexpdr.com`)"
-      - "traefik.http.routers.ward.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.drone.tls.certresolver=letsencrypt"
     networks:
       - "proxy"
 
@@ -40,7 +40,7 @@ services:
       - "traefik.http.routers.dr1.tls=true"
       - "traefik.http.routers.dr1.entrypoints=https"
       - "traefik.http.routers.dr1.rule=Host(`dr1.hs.alexpdr.com`)"
-      - "traefik.http.routers.ward.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dr1.tls.certresolver=letsencrypt"
     networks:
       - "proxy"
 
