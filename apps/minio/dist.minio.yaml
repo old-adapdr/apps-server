@@ -6,6 +6,8 @@ services:
     container_name: minio
     image: minio/minio:latest
     restart: unless-stopped
+    volumes:
+      - /home/ap/global_storage/minio:/data
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.minio.tls=true"
