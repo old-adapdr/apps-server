@@ -1,9 +1,11 @@
-version: '3.3'
+
+version: "3.7"
+
 services:
-  drone-server:
-    image: 'drone/drone:latest'
-    container_name: 'drone-server'
-    restart: always
+  server:
+    image: drone/drone:latest
+    container_name: drone-server
+    restart: unless-stopped
     environment:
       - DRONE_GITHUB_CLIENT_ID=
       - DRONE_GITHUB_CLIENT_SECRET=
@@ -20,12 +22,12 @@ services:
       - "traefik.http.routers.drone.rule=Host(`drone.hs.alexpdr.com`)"
       - "traefik.http.routers.drone.tls.certresolver=letsencrypt"
     networks:
-      - "proxy"
+      - proxy
 
-  drone-runner:
-    image: 'drone/drone-runner-docker:latest'
-    container_name: 'drone-r1'
-    restart: always
+  dr1:
+    image: drone/drone-runner-docker:latest
+    container_name: drone-r1
+    restart: unless-stopped
     environment:
       - DRONE_RPC_PROTO=https
       - DRONE_RPC_HOST=drone.hs.alexpdr.com
@@ -42,7 +44,7 @@ services:
       - "traefik.http.routers.dr1.rule=Host(`dr1.hs.alexpdr.com`)"
       - "traefik.http.routers.dr1.tls.certresolver=letsencrypt"
     networks:
-      - "proxy"
+      - proxy
 
 networks:
   proxy:
