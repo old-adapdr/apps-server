@@ -1,0 +1,19 @@
+
+version: "3.7"
+
+services:
+  minio:
+    container_name: minio
+    image: minio/minio:latest
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.minio.tls=true"
+      - "traefik.http.routers.minio.entrypoints=https"
+      - "traefik.http.routers.minio.rule=Host(`minio.hs.alexpdr.com`)"
+    networks:
+      - "proxy"
+
+networks:
+  proxy:
+    external: true
