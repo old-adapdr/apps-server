@@ -11,7 +11,7 @@ services:
       - "traefik.http.routers.ward-ui.tls=true"
       - "traefik.http.routers.ward-ui.entrypoints=https"
       - "traefik.http.routers.ward-ui.rule=Host(`ward.hs.alexpdr.com`)"
-      - "traefik.http.routers.ward-ui.service=ward"
+      - "traefik.http.routers.ward-ui.service=ward-ui"
       - "traefik.http.services.ward-ui.loadbalancer.server.port=80"
       - "traefik.http.routers.ward-socket.rule=Host(`ward.hs.alexpdr.com`) && Path(`/notifications/hub`)"
       - "traefik.http.routers.ward-socket.service=ward-socket"
