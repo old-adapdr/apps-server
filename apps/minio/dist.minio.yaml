@@ -3,9 +3,13 @@ version: "3.7"
 
 services:
   minio:
-    container_name: minio
     image: minio/minio:latest
+    container_name: minio
     restart: unless-stopped
+    command: server /data
+    environment:
+    - MINIO_ROOT_USER=
+    - MINIO_ROOT_PASSWORD=
     volumes:
       - /home/ap/global_storage/minio:/data
     labels:
