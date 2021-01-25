@@ -4,7 +4,7 @@ version: "3.7"
 services:
   traefik:
     image: "traefik:v2.4"
-    container_name: "traefik-reverse-proxy"
+    container_name: "traefik"
     restart: "unless-stopped"
     ports:
       - "80:80"
