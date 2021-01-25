@@ -11,7 +11,7 @@ services:
       - DRONE_SERVER_HOST=drone.hs.alexpdr.com
       - DRONE_SERVER_PROTO=https
       - DRONE_TLS_AUTOCERT=true
-    volume:
+    volumes:
       - /home/ap/global_storage/drone:/data
     labels:
       - "traefik.enable=true"
@@ -32,7 +32,7 @@ services:
       - DRONE_RPC_SECRET=
       - DRONE_RUNNER_NAME=dr1
       - DRONE_RUNNER_CAPACITY=2
-    volume:
+    volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/ap/global_storage/dr1:/data
     labels:
