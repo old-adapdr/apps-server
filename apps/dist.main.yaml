@@ -4,6 +4,7 @@ version: '3.7'
 services:
   traefik:
     image: "traefik:v2.4"
+    container_name: "traefik-reverse-proxy"
     ports:
       - "80:80"
       - "443:443"

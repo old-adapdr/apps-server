@@ -3,6 +3,7 @@ version: '3.7'
 
 services:
   whoami:
+    container_name: "whoami"
     image: "traefik/whoami:latest"
     labels:
       - "traefik.enable=true"
