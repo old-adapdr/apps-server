@@ -10,10 +10,10 @@ services:
       - /home/ap/global_storage/dr1:/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ward-ui.tls=true"
-      - "traefik.http.routers.ward-ui.entrypoints=https"
-      - "traefik.http.routers.ward-ui.rule=Host(`ward.hs.alexpdr.com`)"
-      - "traefik.http.routers.ward.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bitwarden.tls=true"
+      - "traefik.http.routers.bitwarden.entrypoints=https"
+      - "traefik.http.routers.bitwarden.rule=Host(`ward.hs.alexpdr.com`)"
+      - "traefik.http.routers.bitwarden.tls.certresolver=letsencrypt"
     environment:
       - SIGNUPS_DOMAINS_WHITELIST=@alexpdr.com
     networks:
