@@ -8,3 +8,4 @@ apps/main.py
 
 # Apps
 apps/whoami/whoami.yaml
+apps/ward/ward.yaml
