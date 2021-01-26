@@ -7,7 +7,7 @@ services:
     container_name: bitwarden
     restart: unless-stopped
     volumes:
-      - /home/ap/global_storage/dr1:/data
+      - /home/ap/global_storage/ward:/data
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ward-ui.tls=true"
