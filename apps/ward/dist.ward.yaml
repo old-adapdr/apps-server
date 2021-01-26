@@ -15,7 +15,7 @@ services:
       - "traefik.http.routers.ward-ui.rule=Host(`ward.hs.alexpdr.com`)"
       - "traefik.http.routers.ward.tls.certresolver=letsencrypt"
     environment:
-      - SIGNUPS_ALLOWED=true
+      - SIGNUPS_ALLOWED=false
     networks:
       - proxy
 
