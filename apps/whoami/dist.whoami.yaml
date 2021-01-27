@@ -9,6 +9,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
       - "traefik.http.routers.whoami.entrypoints=https"
       - "traefik.http.routers.whoami.rule=Host(`whoami.hs.alexpdr.com`)"
     networks:

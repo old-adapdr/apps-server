@@ -10,10 +10,10 @@ services:
       - /home/ap/global_storage/ward:/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ward-ui.tls=true"
-      - "traefik.http.routers.ward-ui.entrypoints=https"
-      - "traefik.http.routers.ward-ui.rule=Host(`ward.hs.alexpdr.com`)"
+      - "traefik.http.routers.ward.tls=true"
       - "traefik.http.routers.ward.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.ward.entrypoints=https"
+      - "traefik.http.routers.ward.rule=Host(`ward.hs.alexpdr.com`)"
     environment:
       - SIGNUPS_ALLOWED=false
     networks:
