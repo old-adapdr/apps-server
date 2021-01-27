@@ -9,6 +9,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ctc.tls=true"
+      - "traefik.http.routers.ctc.tls.certresolver=letsencrypt"
       - "traefik.http.routers.ctc.entrypoints=https"
       - "traefik.http.routers.ctc.rule=Host(`ctc.hs.alexpdr.com`)"
     networks:
