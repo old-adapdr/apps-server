@@ -27,7 +27,7 @@ certificatesResolvers:
         entryPoint: http
 
 log:
-  filePath: "/home/ap/hs/apps/traefik/traefik.log"
+  filePath: "/home/ap/global_storage/traefik/traefik.log"
 
 accessLog:
-  filePath: "/home/ap/hs/apps/traefik/access.log"
+  filePath: "/home/ap/global_storage/traefik/access.log"
