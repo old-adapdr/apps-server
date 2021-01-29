@@ -1,0 +1,48 @@
+
+version: "3.7"
+
+services:
+  nextcloud-db:
+    container_name: nextcloud-db
+    image: mariadb:latest
+    restart: unless-stopped
+    volumes:
+      - ~/global_storage/nextcloud:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=
+      - MYSQL_ROOT_PASSWORD=
+    networks:
+      - "proxy"
+      - "personal"
+
+  nextcloud:
+    container_name: nextcloud
+    image: traefik/nextcloud:latest
+    restart: unless-stopped
+    environment:
+      - MYSQL_PASSWORD=
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=nextcloud-db
+    links:
+      - nextcloud-db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.tls=true"
+      - "traefik.http.routers.nextcloud.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.nextcloud.entrypoints=https"
+      - "traefik.http.routers.nextcloud.rule=Host(`cloud.alexpdr.com`)"
+    networks:
+      - "proxy"
+      - "personal"
+    depends_on:
+      - "nextcloud-db"
+
+
+networks:
+  proxy:
+    external: true
+  personal:
+    external: true
