@@ -24,8 +24,8 @@ services:
       - ghost-net
 
   main:
-    container_name: nextcloud
-    image: nextcloud:latest
+    container_name: ghost
+    image: ghost:3-alpine
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/ghost/html:/var/www/html
