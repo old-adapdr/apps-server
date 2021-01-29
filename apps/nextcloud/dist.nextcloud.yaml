@@ -19,7 +19,7 @@ services:
 
   nextcloud:
     container_name: nextcloud
-    image: traefik/nextcloud:latest
+    image: nextcloud:latest
     restart: unless-stopped
     environment:
       - APACHE_DISABLE_REWRITE_IP=1
