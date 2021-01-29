@@ -2,7 +2,7 @@
 version: "3.7"
 
 services:
-  nextcloud-db:
+  db:
     container_name: nextcloud-db
     image: mariadb:latest
     restart: unless-stopped
@@ -17,7 +17,7 @@ services:
       - "proxy"
       - "personal"
 
-  nextcloud:
+  main:
     container_name: nextcloud
     image: nextcloud:latest
     restart: unless-stopped
@@ -27,9 +27,9 @@ services:
       - MYSQL_PASSWORD=
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_HOST=nextcloud-db
+      - MYSQL_HOST=db
     links:
-      - nextcloud-db
+      - db
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.tls=true"
@@ -40,7 +40,7 @@ services:
       - "proxy"
       - "personal"
     depends_on:
-      - "nextcloud-db"
+      - "db"
 
 
 networks:
