@@ -3,6 +3,7 @@ version: "3.7"
 
 networks:
   proxy:  # Used to detect and route to apps & stacks
+    name: proxy
 
 services:
   # Traefik Reverse Proxy + LetsEncrypt auto-https
@@ -46,3 +47,5 @@ services:
       - traefik.http.routers.portainer.rule=Host(`${DOMAIN_PORTAINER}`)
     networks:
       - proxy
+    depends_on:
+      - traefik

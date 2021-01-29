@@ -5,7 +5,7 @@ networks:
   proxy:
     external: true
   nextcloud:
-    name: nextcloud
+    name: nextcloud-db-net
     external: false
 
 volumes:
@@ -37,7 +37,7 @@ services:
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
     networks:
-      - nextcloud
+      - nextcloud-db-net
 
   main:
     container_name: nextcloud
@@ -62,7 +62,7 @@ services:
       - traefik.http.routers.nextcloud.rule=Host(`${DOMAIN}`)
     networks:
       - proxy
-      - nextcloud
+      - nextcloud-db-net
     depends_on:
       - db
 
