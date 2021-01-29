@@ -1,5 +1,5 @@
 # Home (development) Server
-Collection repository for things I might throw out of my development server.
+Box-ready home development server, just copy over `dist.*` files, set the `.env` and get rolling!
 
 ## Overview
 - `apps`: Single service app templates
