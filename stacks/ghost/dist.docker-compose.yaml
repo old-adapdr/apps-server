@@ -22,6 +22,8 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
     networks:
       - ghost-net
+    labels:
+      - traefik.enable=false
 
   main:
     container_name: ghost
