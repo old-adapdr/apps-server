@@ -1,31 +1,53 @@
 
 version: "3.7"
 
+volumes:
+  nextcloud-db:
+    driver: local
+    name: nextcloud-db
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ap/global_storage/nextcloud/mysql
+  nextcloud-main:
+    driver: local
+    name: nextcloud-main
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ap/global_storage/nextcloud/html
+
+networks:
+  proxy:
+    external: true
+  nextcloud:
+
+
 services:
   db:
     container_name: nextcloud-db
     image: mariadb:latest
     restart: unless-stopped
     volumes:
-      - nextcloud:/var/lib/mysql
+      - nextcloud-db:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=
-      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
     networks:
-      - "personal"
+      - nextcloud
 
   main:
     container_name: nextcloud
     image: nextcloud:latest
     restart: unless-stopped
     volumes:
-      - nextcloud:/var/www/html
+      - nextcloud-main:/var/www/html
     environment:
       - APACHE_DISABLE_REWRITE_IP=1
-      - TRUSTED_PROXIES="traefik.hs.alexpdr.com 172.18.0.2"
-      - MYSQL_PASSWORD=
+      - TRUSTED_PROXIES="traefik.hs.alexpdr.com"
+      - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=db
@@ -38,17 +60,8 @@ services:
       - "traefik.http.routers.nextcloud.entrypoints=https"
       - "traefik.http.routers.nextcloud.rule=Host(`cloud.alexpdr.com`)"
     networks:
-      - "proxy"
-      - "personal"
+      - proxy
+      - nextcloud
     depends_on:
-      - "db"
+      - db
 
-volumes:
-  nextcloud:
-    - ~/global_storage/nextcloud:nextcloud
-
-networks:
-  proxy:
-    external: true
-  personal:
-    external: true
