@@ -46,7 +46,7 @@ services:
       - nextcloud-main:/var/www/html
     environment:
       - APACHE_DISABLE_REWRITE_IP=1
-      - TRUSTED_PROXIES="traefik.hs.alexpdr.com"
+      - TRUSTED_PROXIES="traefik.hs.alexpdr.com 172.18.0.2"
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
