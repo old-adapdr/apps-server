@@ -30,11 +30,11 @@ services:
     volumes:
       - ${GLOBAL_STORAGE}/ghost/html:/var/www/html
     environment:
-      - url= https://${DOMAIN}
-      - database__client= mysql
-      - database__connection__host= db
-      - database__connection__database= ghost
-      - database__connection__user= ghost
+      - url=https://${DOMAIN}
+      - database__client=mysql
+      - database__connection__host=db
+      - database__connection__database=ghost
+      - database__connection__user=ghost
       - database__connection__password=${DB_PASS}
 
     links:
