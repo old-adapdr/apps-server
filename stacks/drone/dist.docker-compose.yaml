@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
     environment:
       - DRONE_RPC_PROTO=https
-      - DRONE_RPC_HOST=${DOMAIN_DR1}
+      - DRONE_RPC_HOST=https://${DOMAIN_DR1}
       - DRONE_RPC_SECRET=
       - DRONE_RUNNER_NAME=dr1
       - DRONE_RUNNER_CAPACITY=2
