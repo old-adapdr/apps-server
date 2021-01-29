@@ -35,7 +35,7 @@ services:
       - database__connection__host= db
       - database__connection__database= ghost
       - database__connection__user= ghost
-      - database__connection__password= ${DB_PASS}
+      - database__connection__password=${DB_PASS}
 
     links:
       - db
