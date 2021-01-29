@@ -1,6 +1,13 @@
 
 version: "3.7"
 
+networks:
+  proxy:
+    external: true
+  nextcloud:
+    name: nextcloud
+    external: false
+
 volumes:
   nextcloud-db:
     driver: local
@@ -16,13 +23,6 @@ volumes:
       type: none
       o: bind
       device: ${GLOBAL_STORAGE}/nextcloud/html
-
-networks:
-  proxy:
-    external: true
-  nextcloud:
-    name: nextcloud
-    external: false
 
 services:
   db:

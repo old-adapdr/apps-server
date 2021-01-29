@@ -15,18 +15,18 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $(PWD)/traefik/traefik.yaml:/traefik.yaml
+      - ./traefik.yaml:/traefik.yaml
       - ${GLOBAL_STORAGE}/ssl/acme.json:/acme.json
     labels:
       # HTTP
       - traefik.http.routers.traefik-http.service=api@internal
       - traefik.http.routers.traefik-http.entrypoints=http
-      - traefik.http.routers.traefik-http.rule=Host(`traefik.hs.alexpdr.com`)
+      - traefik.http.routers.traefik-http.rule=Host(`${DOMAIN_TRAEFIK}`)
       # HTTPS
       - traefik.http.routers.traefik-https.tls=true
       - traefik.http.routers.traefik-https.service=api@internal
       - traefik.http.routers.traefik-https.entrypoints=https
-      - traefik.http.routers.traefik-https.rule=Host(`traefik.hs.alexpdr.com`)
+      - traefik.http.routers.traefik-https.rule=Host(`${DOMAIN_TRAEFIK}`)
     networks:
       - proxy
 
@@ -43,6 +43,6 @@ services:
       - traefik.http.routers.portainer.tls=true
       - traefik.http.routers.portainer.tls.certresolver=letsencrypt
       - traefik.http.routers.portainer.entrypoints=https
-      - traefik.http.routers.portainer.rule=Host(`portainer.hs.alexpdr.com`)
+      - traefik.http.routers.portainer.rule=Host(`${DOMAIN_PORTAINER}`)
     networks:
       - proxy
