@@ -4,7 +4,7 @@ version: "3.7"
 networks:
   proxy:
     external: true
-  nextcloud:
+  nextcloud-db-net:
     name: nextcloud-db-net
     external: false
 
