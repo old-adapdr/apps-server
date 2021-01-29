@@ -28,7 +28,7 @@ services:
     image: ghost:3-alpine
     restart: unless-stopped
     volumes:
-      - ${GLOBAL_STORAGE}/ghost/html:/var/www/html
+      - ${GLOBAL_STORAGE}/ghost/main:/var/lib/ghost
     environment:
       - url=https://${DOMAIN}
       - database__client=mysql
@@ -36,7 +36,6 @@ services:
       - database__connection__database=ghost
       - database__connection__user=ghost
       - database__connection__password=${DB_PASS}
-
     links:
       - db
     labels:
