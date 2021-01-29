@@ -4,13 +4,12 @@ version: "3.7"
 services:
   nextcloud:
     container_name: nextcloud
-    image: traefik/nextcloud:latest
+    image: nextcloud:latest
     restart: unless-stopped
     environment:
-      - OBJECTSTORE_S3_HOST=https://minio.hs.alexpdr.com
+      - OBJECTSTORE_S3_HOST=minio.hs.alexpdr.com
       - OBJECTSTORE_S3_BUCKET=nextcloud
       - OBJECTSTORE_S3_SECRET=
-      - OBJECTSTORE_S3_PORT=9000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.tls=true"
