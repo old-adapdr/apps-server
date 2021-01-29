@@ -14,7 +14,7 @@ services:
       - DRONE_SERVER_PROTO=https
       - DRONE_TLS_AUTOCERT=true
     volumes:
-      - ${GLOBAL_STORAGE}/drone:/data
+      - ${GLOBAL_STORAGE}/drone/server:/data
     labels:
       - traefik.enable=true
       - traefik.http.routers.drone.tls=true
@@ -36,7 +36,7 @@ services:
       - DRONE_RUNNER_CAPACITY=2
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${GLOBAL_STORAGE}/dr1:/data
+      - ${GLOBAL_STORAGE}/drone/dr1:/data
     labels:
       - traefik.enable=true
       - traefik.http.routers.dr1.tls=true
