@@ -1,8 +1,22 @@
 # Home (development) Server
----
-Set up with Traefik as a container native proxy. Utilizes a proxy network for port discovery and auto-https.
+Collection repository for things I might throw out of my development server.
 
-## Usage
-1. Clone the repo
-2. Copy over `dist.*` files or **read first** then run the `setup.sh`
-3. New services can be added by using the `whoami/dist.whoami.yaml` as a template.
+## Overview
+- `apps`: Single service app templates
+- `stacks`: Multi-service stack templates
+
+**Apps**:
+- `bitwarden_rs`: rust implementation of the community version of bitwarden
+- `ctc`: container test web application
+- `minio`: open-source object storage
+- `whoami`: traefik sample whoami application
+  
+**Stacks**:
+- `drone`: modern blazingly fast ci/cd with 1 runner accepting 2 builds
+- `nextcloud` open-source alternative to gcloud/dropbox with mariadb for storage
+
+## Notes
+- Requires a `*.sub.domaim.com` pointing towards the node
+- Any number of domains can be pointed towards the node and have certs generated
+- Certs are kept in `./ssl/acme.json` as a central store
+  - This can be changed by adding more/specific resolvers in the `traefik.yaml` file.

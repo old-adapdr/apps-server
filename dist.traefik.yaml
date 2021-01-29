@@ -12,7 +12,7 @@ entryPoints:
     address: ":443"
 
 pilot:
-    token: ""
+    token: ${PILOT_TOKEN}
 
 providers:
   docker:
@@ -21,13 +21,13 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: me@alexpdr.dev
+      email: ${ACME_EMAIL}
       storage: acme.json
       httpChallenge:
         entryPoint: http
 
 log:
-  filePath: "/home/ap/global_storage/traefik/traefik.log"
+  filePath: ${GLOBAL_STORAGE}/traefik/traefik.log
 
 accessLog:
-  filePath: "/home/ap/global_storage/traefik/access.log"
+  filePath: ${GLOBAL_STORAGE}/traefik/access.log

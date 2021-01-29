@@ -8,20 +8,21 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/ap/global_storage/nextcloud/mysql
+      device: ${GLOBAL_STORAGE}/nextcloud/mysql
   nextcloud-main:
     driver: local
     name: nextcloud-main
     driver_opts:
       type: none
       o: bind
-      device: /home/ap/global_storage/nextcloud/html
+      device: ${GLOBAL_STORAGE}/nextcloud/html
 
 networks:
   proxy:
     external: true
   nextcloud:
-
+    name: nextcloud
+    external: false
 
 services:
   db:
@@ -54,11 +55,11 @@ services:
     links:
       - db
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nextcloud.tls=true"
-      - "traefik.http.routers.nextcloud.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.nextcloud.entrypoints=https"
-      - "traefik.http.routers.nextcloud.rule=Host(`cloud.alexpdr.com`)"
+      - traefik.enable=true
+      - traefik.http.routers.nextcloud.tls=true
+      - traefik.http.routers.nextcloud.tls.certresolver=letsencrypt
+      - traefik.http.routers.nextcloud.entrypoints=https
+      - traefik.http.routers.nextcloud.rule=Host(`${DOMAIN}`)
     networks:
       - proxy
       - nextcloud
