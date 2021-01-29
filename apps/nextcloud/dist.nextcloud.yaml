@@ -7,7 +7,7 @@ services:
     image: mariadb:latest
     restart: unless-stopped
     volumes:
-      - ~/global_storage/nextcloud:/var/lib/mysql
+      - nextcloud:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
@@ -20,6 +20,8 @@ services:
     container_name: nextcloud
     image: nextcloud:latest
     restart: unless-stopped
+    volumes:
+      - nextcloud:/var/www/html
     environment:
       - APACHE_DISABLE_REWRITE_IP=1
       - TRUSTED_PROXIES="traefik.hs.alexpdr.com 172.18.0.2"
@@ -41,6 +43,9 @@ services:
     depends_on:
       - "db"
 
+volumes:
+  nextcloud:
+    - ~/global_storage/nextcloud:nextcloud
 
 networks:
   proxy:
