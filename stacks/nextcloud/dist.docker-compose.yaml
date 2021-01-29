@@ -4,25 +4,9 @@ version: "3.7"
 networks:
   proxy:
     external: true
-  nextcloud-db-net:
-    name: nextcloud-db-net
+  nextcloud-net:
+    name: nextcloud-net
     external: false
-
-volumes:
-  nextcloud-db:
-    driver: local
-    name: nextcloud-db
-    driver_opts:
-      type: none
-      o: bind
-      device: ${GLOBAL_STORAGE}/nextcloud/mysql
-  nextcloud-main:
-    driver: local
-    name: nextcloud-main
-    driver_opts:
-      type: none
-      o: bind
-      device: ${GLOBAL_STORAGE}/nextcloud/html
 
 services:
   db:
@@ -30,21 +14,21 @@ services:
     image: mariadb:latest
     restart: unless-stopped
     volumes:
-      - nextcloud-db:/var/lib/mysql
+      - ${GLOBAL_STORAGE}/nextcloud/mysql:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
     networks:
-      - nextcloud-db-net
+      - nextcloud-net
 
   main:
     container_name: nextcloud
     image: nextcloud:latest
     restart: unless-stopped
     volumes:
-      - nextcloud-main:/var/www/html
+      - ${GLOBAL_STORAGE}/nextcloud/html:/var/www/html
     environment:
       - APACHE_DISABLE_REWRITE_IP=1
       - TRUSTED_PROXIES=${TRUSTED_PROXIES}
@@ -62,7 +46,7 @@ services:
       - traefik.http.routers.nextcloud.rule=Host(`${DOMAIN}`)
     networks:
       - proxy
-      - nextcloud-db-net
+      - nextcloud-net
     depends_on:
       - db
 
