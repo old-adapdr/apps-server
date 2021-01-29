@@ -22,6 +22,8 @@ services:
     image: traefik/nextcloud:latest
     restart: unless-stopped
     environment:
+      - APACHE_DISABLE_REWRITE_IP=1
+      - TRUSTED_PROXIES="traefik.hs.alexpdr.com 172.18.0.2"
       - MYSQL_PASSWORD=
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
