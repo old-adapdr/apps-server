@@ -1,0 +1,20 @@
+
+version: "3.7"
+
+services:
+  whoami:
+    container_name: whoami
+    image: traefik/whoami:latest
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.whoami.tls=true
+      - traefik.http.routers.whoami.tls.certresolver=letsencrypt
+      - traefik.http.routers.whoami.entrypoints=https
+      - traefik.http.routers.whoami.rule=Host(`${DOMAIN}`)
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

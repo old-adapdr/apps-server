@@ -1,27 +1,12 @@
 
 version: "3.7"
 
-volumes:
-  nextcloud-db:
-    driver: local
-    name: nextcloud-db
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/ap/global_storage/nextcloud/mysql
-  nextcloud-main:
-    driver: local
-    name: nextcloud-main
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/ap/global_storage/nextcloud/html
-
 networks:
   proxy:
     external: true
-  nextcloud:
-
+  nextcloud-net:
+    name: nextcloud-net
+    external: false
 
 services:
   db:
@@ -29,21 +14,21 @@ services:
     image: mariadb:latest
     restart: unless-stopped
     volumes:
-      - nextcloud-db:/var/lib/mysql
+      - ${GLOBAL_STORAGE}/nextcloud/mysql:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
     networks:
-      - nextcloud
+      - nextcloud-net
 
   main:
     container_name: nextcloud
     image: nextcloud:latest
     restart: unless-stopped
     volumes:
-      - nextcloud-main:/var/www/html
+      - ${GLOBAL_STORAGE}/nextcloud/html:/var/www/html
     environment:
       - APACHE_DISABLE_REWRITE_IP=1
       - TRUSTED_PROXIES=${TRUSTED_PROXIES}
@@ -54,14 +39,14 @@ services:
     links:
       - db
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nextcloud.tls=true"
-      - "traefik.http.routers.nextcloud.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.nextcloud.entrypoints=https"
-      - "traefik.http.routers.nextcloud.rule=Host(`cloud.alexpdr.com`)"
+      - traefik.enable=true
+      - traefik.http.routers.nextcloud.tls=true
+      - traefik.http.routers.nextcloud.tls.certresolver=letsencrypt
+      - traefik.http.routers.nextcloud.entrypoints=https
+      - traefik.http.routers.nextcloud.rule=Host(`${DOMAIN}`)
     networks:
       - proxy
-      - nextcloud
+      - nextcloud-net
     depends_on:
       - db
 

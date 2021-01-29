@@ -1,0 +1,24 @@
+
+version: "3.7"
+
+services:
+  server:
+    image: bitwardenrs/server:latest
+    container_name: bitwarden
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/bitwarden:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bitwarden.tls=true
+      - traefik.http.routers.bitwarden.tls.certresolver=letsencrypt
+      - traefik.http.routers.bitwarden.entrypoints=https
+      - traefik.http.routers.bitwarden.rule=Host(`${DOMAIN}`)
+    environment:
+      - SIGNUPS_ALLOWED=${SIGNUPS}
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
