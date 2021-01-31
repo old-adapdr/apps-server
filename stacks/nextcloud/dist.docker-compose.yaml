@@ -22,6 +22,8 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
     networks:
       - nextcloud-net
+    labels:
+      - traefik.enable=false
 
   main:
     container_name: nextcloud
