@@ -22,6 +22,8 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
     networks:
       - nextcloud-net
+    labels:
+      - traefik.enable=false
 
   main:
     container_name: nextcloud
@@ -40,10 +42,19 @@ services:
       - db
     labels:
       - traefik.enable=true
+      # Routers
       - traefik.http.routers.nextcloud.tls=true
       - traefik.http.routers.nextcloud.tls.certresolver=letsencrypt
       - traefik.http.routers.nextcloud.entrypoints=https
       - traefik.http.routers.nextcloud.rule=Host(`${DOMAIN}`)
+      # Middleware
+      - traefik.http.middlewares.nextcloud.headers.customFrameOptionsValue=SAMEORIGIN
+      - traefik.http.middlewares.nextcloud.headers.framedeny=true
+      - traefik.http.middlewares.nextcloud.headers.sslredirect=true
+      - traefik.http.middlewares.nextcloud.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.nextcloud.headers.STSPreload=true
+      - traefik.http.middlewares.nextcloud.headers.STSSeconds=315360000
+      - traefik.http.middlewares.nextcloud.headers.forceSTSHeader=true
     networks:
       - proxy
       - nextcloud-net

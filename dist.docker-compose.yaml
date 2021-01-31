@@ -11,13 +11,20 @@ services:
     image: traefik:v2.4
     container_name: traefik
     restart: unless-stopped
+    command: --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
+    environment: 
+      - TRAEFIK_PILOT_TOKEN=${PILOT_TOKEN}
+      - TRAEFIK_LOG=true
+      - TRAEFIK_LOG_FILEPATH=${GLOBAL_STORAGE}/traefik/traefik.log
+      - TRAEFIK_ACCESSLOG=true
+      - TRAEFIK_ACCESSLOG_FILEPATH=${GLOBAL_STORAGE}/traefik/access.log
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.yaml:/traefik.yaml
-      - ${GLOBAL_STORAGE}/ssl/acme.json:/acme.json
+      - ./traefik.yaml:/etc/traefik/traefik.yaml
+      - ${GLOBAL_STORAGE}/ssl/acme.json:/etc/traefik/acme.json
     labels:
       # HTTP
       - traefik.http.routers.traefik-http.service=api@internal
