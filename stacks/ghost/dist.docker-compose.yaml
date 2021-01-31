@@ -46,6 +46,7 @@ services:
       - traefik.http.routers.ghost.tls.certresolver=letsencrypt
       - traefik.http.routers.ghost.entrypoints=https
       - traefik.http.routers.ghost.rule=Host(`${DOMAIN}`)
+      - traefik.port=2368
     networks:
       - proxy
       - ghost-net
