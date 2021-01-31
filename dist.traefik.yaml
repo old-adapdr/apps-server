@@ -11,9 +11,6 @@ entryPoints:
   https:
     address: ":443"
 
-pilot:
-    token: ${PILOT_TOKEN}
-
 providers:
   docker:
     network: proxy
@@ -21,13 +18,6 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: ${ACME_EMAIL}
       storage: acme.json
       httpChallenge:
         entryPoint: http
-
-log:
-  filePath: ${GLOBAL_STORAGE}/traefik/traefik.log
-
-accessLog:
-  filePath: ${GLOBAL_STORAGE}/traefik/access.log
