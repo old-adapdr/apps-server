@@ -30,7 +30,7 @@ services:
     image: ghost:3-alpine
     restart: unless-stopped
     volumes:
-      - ${GLOBAL_STORAGE}/ghost/main:/var/lib/ghost
+      - ${GLOBAL_STORAGE}/ghost/main:/var/lib/ghost/content
     environment:
       - url=https://${DOMAIN}
       - database__client=mysql
