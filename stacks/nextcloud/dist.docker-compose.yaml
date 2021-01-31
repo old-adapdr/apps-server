@@ -55,6 +55,8 @@ services:
       - traefik.http.middlewares.nextcloud.headers.STSPreload=true
       - traefik.http.middlewares.nextcloud.headers.STSSeconds=315360000
       - traefik.http.middlewares.nextcloud.headers.forceSTSHeader=true
+      # Router <-> Middleware
+      - traefik.http.routers.nextcloud.middlewares=nextcloud
     networks:
       - proxy
       - nextcloud-net
