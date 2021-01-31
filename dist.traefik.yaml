@@ -18,6 +18,6 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      storage: acme.json
+      storage: /etc/traefik/acme.json
       httpChallenge:
         entryPoint: http
