@@ -55,8 +55,11 @@ services:
       - traefik.http.middlewares.nextcloud.headers.STSPreload=true
       - traefik.http.middlewares.nextcloud.headers.STSSeconds=315360000
       - traefik.http.middlewares.nextcloud.headers.forceSTSHeader=true
+      - "traefik.http.middlewares.nextcloud-caldav.redirectregex.permanent=true"
+      - "traefik.http.middlewares.nextcloud-caldav.redirectregex.regex=^https://(.*)/.well-known/(card|cal)dav"
+      - "traefik.http.middlewares.nextcloud-caldav.redirectregex.replacement=https://$${1}/remote.php/dav/"
       # Router <-> Middleware
-      - traefik.http.routers.nextcloud.middlewares=nextcloud
+      - traefik.http.routers.nextcloud.middlewares=nextcloud,nextcloud-caldav
     networks:
       - proxy
       - nextcloud-net
