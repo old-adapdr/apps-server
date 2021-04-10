@@ -39,6 +39,7 @@ services:
       - traefik.http.routers.matomo.entrypoints=https
       - traefik.http.routers.matomo.rule=Host(`${DOMAIN}`)
     environment:
+      - MATOMO_DATABASE_HOST=db
       - MATOMO_DATABASE_DBNAME=${DB_NAME}
       - MATOMO_DATABASE_USERNAME=${DB_USER}
       - MATOMO_DATABASE_PASSWORD=${DB_PASS}
