@@ -13,7 +13,6 @@ services:
     container_name: ghost-db
     image: mariadb:latest
     restart: unless-stopped
-    command: --max-allowed-packet=64MB
     volumes:
       - ${GLOBAL_STORAGE}/ghost/mysql:/var/lib/mysql
     environment:

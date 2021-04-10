@@ -12,6 +12,7 @@ services:
     container_name: matomo-db
     image: mariadb:latest
     restart: unless-stopped
+    command: --max-allowed-packet=64MB
     volumes:
       - ${GLOBAL_STORAGE}/matomo/mysql:/var/lib/mysql
     environment:
