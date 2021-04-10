@@ -20,6 +20,7 @@ services:
       - MYSQL_USER=ghost
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - 
     networks:
       - ghost-net
     labels:
@@ -27,7 +28,7 @@ services:
 
   main:
     container_name: ghost
-    image: ghost:3-alpine
+    image: ghost:4-alpine
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/ghost/main:/var/lib/ghost/content
