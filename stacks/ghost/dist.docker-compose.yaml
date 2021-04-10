@@ -13,6 +13,7 @@ services:
     container_name: ghost-db
     image: mariadb:latest
     restart: unless-stopped
+    command: --max-allowed-packet=64MB
     volumes:
       - ${GLOBAL_STORAGE}/ghost/mysql:/var/lib/mysql
     environment:
@@ -20,6 +21,7 @@ services:
       - MYSQL_USER=ghost
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - 
     networks:
       - ghost-net
     labels:
@@ -27,7 +29,7 @@ services:
 
   main:
     container_name: ghost
-    image: ghost:3-alpine
+    image: ghost:4-alpine
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/ghost/main:/var/lib/ghost/content
