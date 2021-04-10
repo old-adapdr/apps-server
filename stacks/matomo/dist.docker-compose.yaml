@@ -1,0 +1,38 @@
+version: "3.7"
+
+services:
+  db:
+    container_name: matomo-db
+    image: mariadb:latest
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/matomo/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=matomo
+      - MYSQL_USER=matomo
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+    networks:
+      - matomo-net
+    labels:
+      - traefik.enable=false
+  main:
+    image: matomo:latest
+    container_name: matomo
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/matomo/main:/var/www/html
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.matomo.tls=true
+      - traefik.http.routers.matomo.tls.certresolver=letsencrypt
+      - traefik.http.routers.matomo.entrypoints=https
+      - traefik.http.routers.matomo.rule=Host(`${DOMAIN}`)
+    environment:
+      - SIGNUPS_ALLOWED=${SIGNUPS}
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
