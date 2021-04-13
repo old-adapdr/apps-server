@@ -25,6 +25,15 @@ services:
     labels:
       - traefik.enable=false
 
+  cache:
+    container_name: nextcloud-redis
+    image: redis:6-alpine
+    restart: unless-stopped
+    networks:
+      - nextcloud-net
+    labels:
+      - traefik.enable=false
+
   main:
     container_name: nextcloud
     image: nextcloud:latest
@@ -34,12 +43,14 @@ services:
     environment:
       - APACHE_DISABLE_REWRITE_IP=1
       - TRUSTED_PROXIES=${TRUSTED_PROXIES}
+      - MYSQL_HOST=db
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_HOST=db
+      - REDIS_HOST=cache
     links:
       - db
+      - cache
     labels:
       - traefik.enable=true
       # Routers
@@ -65,4 +76,5 @@ services:
       - nextcloud-net
     depends_on:
       - db
+      - cache
 
