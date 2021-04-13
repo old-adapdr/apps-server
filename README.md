@@ -15,6 +15,7 @@ Box-ready home development server, just copy over `dist.*` files, set the `.env`
 - `drone`: modern blazingly fast ci/cd with 1 runner accepting 2 builds
 - `nextcloud` open-source alternative to gcloud/dropbox with mariadb for storage
 - `ghost`: open-source blogging platform
+- `matomo`: open-source GDPR compliant analytics
 
 ## Notes
 - Requires a `*.sub.domaim.com` pointing towards the node
