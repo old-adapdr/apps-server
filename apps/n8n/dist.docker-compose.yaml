@@ -1,0 +1,36 @@
+
+version: "3.7"
+
+services:
+  server:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/n8n:/home/node/.n8n
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.n8n.tls=true
+      - traefik.http.routers.n8n.tls.certresolver=letsencrypt
+      - traefik.http.routers.n8n.entrypoints=https
+      - traefik.http.routers.n8n.rule=Host(`${DOMAIN}`)
+      # Middleware
+      - traefik.http.middlewares.n8n.headers.SSLRedirect=true
+      - traefik.http.middlewares.n8n.headers.STSSeconds=315360000
+      - traefik.http.middlewares.n8n.headers.browserXSSFilter=true
+      - traefik.http.middlewares.n8n.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.n8n.headers.forceSTSHeader=true
+      - traefik.http.middlewares.n8n.headers.SSLHost=${DOMAIN}
+      - traefik.http.middlewares.n8n.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.n8n.headers.STSPreload=true
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${USERNAME}
+      - N8N_BASIC_AUTH_PASSWORD=${PASSWORD} 
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
