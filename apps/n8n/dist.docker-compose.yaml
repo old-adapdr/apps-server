@@ -10,11 +10,15 @@ services:
       - ${GLOBAL_STORAGE}/n8n:/home/node/.n8n
     labels:
       - traefik.enable=true
+      # Routers
       - traefik.http.routers.n8n.tls=true
       - traefik.http.routers.n8n.tls.certresolver=letsencrypt
       - traefik.http.routers.n8n.entrypoints=https
       - traefik.http.routers.n8n.rule=Host(`${DOMAIN}`)
-      - traefik.http.middlewares.test-auth.basicauth.usersfile=${USERS_FILE_PATH}
+      # Middleware
+      - traefik.http.middlewares.n8n-auth.basicauth.usersfile=${USERS_FILE_PATH}
+      # Router <-> Middleware
+      - traefik.http.routers.n8n.middlewares=n8n-auth
     networks:
       - proxy
 
