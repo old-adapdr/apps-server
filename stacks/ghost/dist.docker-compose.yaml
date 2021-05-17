@@ -28,7 +28,7 @@ services:
 
   main:
     container_name: ghost
-    image: ghost:4-alpine
+    image: ghost:4.4-alpine
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/ghost/main:/var/lib/ghost/content
