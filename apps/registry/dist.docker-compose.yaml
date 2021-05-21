@@ -1,0 +1,30 @@
+
+version: "3.7"
+
+services:
+  registry:
+    image: registry:latest
+    container_name: registry
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/registry:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.registry.tls=true
+      - traefik.http.routers.registry.tls.certresolver=letsencrypt
+      - traefik.http.routers.registry.entrypoints=https
+      - traefik.http.routers.registry.rule=Host(`${DOMAIN}`)
+    environment:
+      - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
+    networks:
+      - proxy
+      - registry-net
+    volumes:
+      - ${GLOBAL_STORAGE}/registry/data:/data
+
+networks:
+  proxy:
+    external: true
+  registry-net:
+    name: registry-net
+    external: false
