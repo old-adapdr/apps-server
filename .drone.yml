@@ -21,6 +21,6 @@ steps:
   - echo "Deployment complete!"
   when:
     branch:
-    - update/pipeline-perm-bug-fix
+    - main
     event:
     - push
