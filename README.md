@@ -10,6 +10,8 @@ Box-ready home development server, just copy over `dist.*` files, set the `.env`
 - `ctc`: container test web application
 - `minio`: open-source object storage
 - `whoami`: traefik sample whoami application
+- `n8n`: workflow/automation tool
+- `docker-registry`: docker container registry
   
 **Stacks**:
 - `drone`: modern blazingly fast ci/cd with 1 runner accepting 2 builds
