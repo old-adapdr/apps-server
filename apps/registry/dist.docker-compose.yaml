@@ -18,9 +18,13 @@ services:
       - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
     networks:
       - proxy
+      - registry-net
     volumes:
       - ${GLOBAL_STORAGE}/registry/data:/data
 
 networks:
   proxy:
     external: true
+  registry-net:
+    name: registry-net
+    external: false
