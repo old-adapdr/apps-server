@@ -29,7 +29,7 @@ def deploy(root_path: str, prefix: str, update_type: str):
     """
     print("-" * 40, "\nUpdating core services", "-" * 40)
     run(["docker-compose", "pull"], cwd=Path(root_path))
-    run(["docker-compose", "up -d"], cwd=Path(root_path))
+    run(["docker-compose", "up", "-d"], cwd=Path(root_path))
 
     target_dir = f"{root_path}{prefix}"
     for folder in Path(target_dir).absolute().iterdir():
@@ -49,7 +49,7 @@ def deploy(root_path: str, prefix: str, update_type: str):
                     dst=str(file.name).strip("dist.")
                 )
                 run(["docker-compose", "pull"], cwd=folder)
-                run(["docker-compose", "up -d"], cwd=folder)
+                run(["docker-compose", "up", "-d"], cwd=folder)
 
                 print("-" * 40)
 
