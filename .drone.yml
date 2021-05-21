@@ -6,7 +6,7 @@ name: Deployment-Pipeline
 platform:
   os: linux
   arch: amd64
-  user: ap
+  user: root
 
 steps:
 - name: Deploy
