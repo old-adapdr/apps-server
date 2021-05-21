@@ -14,7 +14,8 @@ steps:
       from_secret: root_path
   commands:
   # - ./${root_path}deploy.py
-  - sudo ./deploy.py
+  - sudo cp deploy.py ${ROOT_PATH}/deploy.poy
+  - echo ${ROOT_PATH}
   when:
     branch:
     - update/pipeline-perm-bug-fix
