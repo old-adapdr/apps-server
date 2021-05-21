@@ -6,7 +6,6 @@ name: Deployment-Pipeline
 platform:
   os: linux
   arch: amd64
-  user: root
 
 steps:
 - name: Deploy
@@ -14,7 +13,6 @@ steps:
     ROOT_PATH:
       from_secret: root_path
   commands:
-  - chmod +x /${root_path}deploy.py
   - ./${root_path}deploy.py
   when:
     branch:
