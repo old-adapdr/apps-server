@@ -19,6 +19,9 @@ steps:
   # - sudo python3 deploy.py
   - pwd
   - ls
+  - echo "test"
+  - echo $ROOT_PATH
+  - echo $root_path
   when:
     branch:
     - update/pipeline-perm-bug-fix
