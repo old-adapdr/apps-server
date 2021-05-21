@@ -13,8 +13,8 @@ steps:
     ROOT_PATH:
       from_secret: root_path
   commands:
-  - cp deploy.py $ROOT_PATH/deploy.py
-  - cd $ROOT_PATH && ./deploy.py
+  # - cp deploy.py $ROOT_PATH/deploy.py
+  - cd $ROOT_PATH && sudo ./deploy.py
   when:
     branch:
     - main
