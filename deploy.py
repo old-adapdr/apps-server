@@ -37,6 +37,7 @@ def deploy(root_path: str, prefix: str, update_type: str):
             if (
                 file.name.endswith(".env")
                 or Path(file).is_dir()
+                or "drone" in Path(file)
             ):
                 continue
             elif file.name.startswith("dist"):
