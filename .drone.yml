@@ -13,17 +13,12 @@ steps:
     ROOT_PATH:
       from_secret: root_path
   commands:
-  # - ./${root_path}deploy.py
-  # - sudo cp deploy.py /home/ap/hs/deploy.py
-  # - sudo ls /home/ap/hs/
-  # - sudo python3 deploy.py
-  # - pwd
-  # - ls
-  # - echo "test"
+  - echo "Moving deploy file over to target directory via secret root_path"
   - cp deploy.py $ROOT_PATH/deploy.py
   - cd $ROOT_PATH
-  - pwd && ls
+  - echo "Running deploy..."
   - ./deploy.py
+  - echo "Deployment complete!"
   when:
     branch:
     - update/pipeline-perm-bug-fix
