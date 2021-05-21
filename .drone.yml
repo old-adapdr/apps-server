@@ -16,7 +16,7 @@ steps:
   # - ./${root_path}deploy.py
   # - sudo cp deploy.py /home/ap/hs/deploy.py
   # - sudo ls /home/ap/hs/
-  - sudo deploy.py
+  - sudo python3 deploy.py
   when:
     branch:
     - update/pipeline-perm-bug-fix
