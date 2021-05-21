@@ -17,11 +17,11 @@ steps:
   # - sudo cp deploy.py /home/ap/hs/deploy.py
   # - sudo ls /home/ap/hs/
   # - sudo python3 deploy.py
-  - pwd
-  - ls
-  - echo "test"
-  - echo $ROOT_PATH
-  - echo $root_path
+  # - pwd
+  # - ls
+  # - echo "test"
+  - cd $ROOT_PATH
+  - ./python.py
   when:
     branch:
     - update/pipeline-perm-bug-fix
