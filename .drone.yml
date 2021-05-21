@@ -9,11 +9,16 @@ platform:
 
 steps:
 - name: Deploy
-  commands:
-  - ./deploy.py
   environment:
     ROOT_PATH:
       from_secret: root_path
+  commands:
+  - echo "Moving deploy file over to target directory via secret root_path"
+  - cp deploy.py $ROOT_PATH/deploy.py
+  - cd $ROOT_PATH
+  - echo "Running deploy..."
+  - ./deploy.py
+  - echo "Deployment complete!"
   when:
     branch:
     - main
