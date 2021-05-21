@@ -21,7 +21,8 @@ steps:
   # - ls
   # - echo "test"
   - cd $ROOT_PATH
-  - ./python.py
+  - pwd
+  - ls
   when:
     branch:
     - update/pipeline-perm-bug-fix
