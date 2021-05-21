@@ -13,7 +13,8 @@ steps:
     ROOT_PATH:
       from_secret: root_path
   commands:
-  - ./${root_path}deploy.py
+  # - ./${root_path}deploy.py
+  - cp deploy.py ${root_path}/deploy.py
   when:
     branch:
     - update/pipeline-perm-bug-fix
