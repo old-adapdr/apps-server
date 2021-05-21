@@ -1,4 +1,7 @@
 # Home (development) Server
+[![Build Status](https://drone.hs.alexpdr.com/api/badges/alexpdr/hs/status.svg)](https://drone.hs.alexpdr.com/alexpdr/hs)
+
+
 Box-ready home development server, just copy over `dist.*` files, set the `.env` and get rolling!
 
 ## Overview
