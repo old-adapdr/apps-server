@@ -27,23 +27,17 @@ def deploy(root_path: str, prefix: str, update_type: str):
     Examples:
     - deploy("/home/USER/REPOSITORY", "SERVICES", "SERVICES")
     """
-    print("-" * 40, "\nUpdating core services", "-" * 40)
-    run(["docker-compose", "pull"], cwd=Path(root_path))
-    run(["docker-compose", "up", "-d"], cwd=Path(root_path))
-
     target_dir = f"{root_path}{prefix}"
     for folder in Path(target_dir).absolute().iterdir():
         for file in Path(folder).absolute().iterdir():
             if (
                 file.name.endswith(".env")
                 or Path(file).is_dir()
-                or str(Path(file)).find("drone")
             ):
                 continue
             elif file.name.startswith("dist"):
-                print("-" * 40)
-
                 print(f"Updating {update_type}='{str(folder).split('/')[-1]}'")
+                print("-" * 40)
                 print("Copying over docker-compose file...")
                 copyfile(
                     src=file.name,
@@ -55,6 +49,11 @@ def deploy(root_path: str, prefix: str, update_type: str):
                 print("-" * 40)
 
 
-# Deploy apps
+# Pull & update core services (Traefik+Portainer)
+print("-" * 40, "\nUpdating core services\n", "-" * 40)
+run(["docker-compose", "pull"], cwd=Path(root_path))
+run(["docker-compose", "up", "-d"], cwd=Path(root_path))
+
+# Deploy new updates for apps and services
 deploy(root_path=root_path, prefix=prefix_apps, update_type="app")
 deploy(root_path=root_path, prefix=prefix_stacks, update_type="stack")
