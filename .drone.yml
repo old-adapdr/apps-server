@@ -14,7 +14,7 @@ steps:
       from_secret: root_path
   commands:
   # - cp deploy.py $ROOT_PATH/deploy.py
-  - cd $ROOT_PATH && sudo ./deploy.py
+  - cd $ROOT_PATH && sudo python3 deploy.py
   when:
     branch:
     - main
