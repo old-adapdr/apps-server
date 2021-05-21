@@ -13,7 +13,7 @@ steps:
     ROOT_PATH:
       from_secret: root_path
   commands:
-  - ${ROOT_PATH}/deploy.py
+  - ~/hs/deploy.py
   when:
     branch:
     - update/pipeline-perm-bug-fix
