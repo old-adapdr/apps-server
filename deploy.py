@@ -49,11 +49,11 @@ def deploy(root_path: str, prefix: str, update_type: str):
                 print("-" * 40)
 
 
+# Deploy new updates for apps and services
+deploy(root_path=root_path, prefix=prefix_apps, update_type="app")
+deploy(root_path=root_path, prefix=prefix_stacks, update_type="stack")
+
 # Pull & update core services (Traefik+Portainer)
 print("-" * 40, "\nUpdating core services\n", "-" * 40)
 run(["docker-compose", "pull"], cwd=Path(root_path))
 run(["docker-compose", "up", "-d"], cwd=Path(root_path))
-
-# Deploy new updates for apps and services
-deploy(root_path=root_path, prefix=prefix_apps, update_type="app")
-deploy(root_path=root_path, prefix=prefix_stacks, update_type="stack")
