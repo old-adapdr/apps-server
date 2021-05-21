@@ -9,13 +9,13 @@ platform:
 
 steps:
 - name: Deploy
-  commands:
-  - ./deploy.py
   environment:
     ROOT_PATH:
       from_secret: root_path
+  commands:
+  - ${ROOT_PATH}/deploy.py
   when:
     branch:
-    - main
+    - update/pipeline-perm-bug-fix
     event:
     - push
