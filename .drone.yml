@@ -20,9 +20,10 @@ steps:
   # - pwd
   # - ls
   # - echo "test"
+  - cp deploy.py $ROOT_PATH/deploy.py
   - cd $ROOT_PATH
-  - pwd
-  - ls
+  - pwd && ls
+  - ./deploy.py
   when:
     branch:
     - update/pipeline-perm-bug-fix
