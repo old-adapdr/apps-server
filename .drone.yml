@@ -14,6 +14,7 @@ steps:
     ROOT_PATH:
       from_secret: root_path
   commands:
+  - chmod +x /${root_path}deploy.py
   - ./${root_path}deploy.py
   when:
     branch:
