@@ -67,8 +67,6 @@ services:
       - _APP_FUNCTIONS_MEMORY
       - _APP_FUNCTIONS_MEMORY_SWAP
       - _APP_FUNCTIONS_ENVS
-    labels:
-      - traefik.enable=false
   appwrite-worker-usage:
     image: appwrite/appwrite:0.7.2
     entrypoint: worker-usage
