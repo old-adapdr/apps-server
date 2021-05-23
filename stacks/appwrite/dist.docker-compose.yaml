@@ -188,7 +188,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${GLOBAL_STORAGE}/appwrite:/storage/functions:rw
-      - appwrite/tmp:/tmp:rw
+      - ${GLOBAL_STORAGE}/appwrite/tmp:/tmp:rw
     environment:
       - _APP_ENV
       - _APP_REDIS_HOST
