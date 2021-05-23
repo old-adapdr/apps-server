@@ -344,3 +344,5 @@ networks:
     proxy:
         external: true
     appwrite-net:
+      name: appwrite-net
+      external: false
