@@ -19,10 +19,10 @@ services:
     labels:
       - traefik.enable=true
       # Routers
-      - traefik.http.routers.nextcloud.tls=true
-      - traefik.http.routers.nextcloud.tls.certresolver=letsencrypt
-      - traefik.http.routers.nextcloud.entrypoints=https
-      - traefik.http.routers.nextcloud.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.appwrite.tls=true
+      - traefik.http.routers.appwrite.tls.certresolver=letsencrypt
+      - traefik.http.routers.appwrite.entrypoints=https
+      - traefik.http.routers.appwrite.rule=Host(`${DOMAIN}`)
     volumes:
       - ${GLOBAL_STORAGE}/appwrite:/storage/uploads:rw
       - ${GLOBAL_STORAGE}/appwrite:/storage/cache:rw
