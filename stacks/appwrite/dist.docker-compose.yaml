@@ -223,10 +223,13 @@ services:
     container_name: appwrite-worker-certificates
     restart: unless-stopped
     networks:
-      - appwrite
+      - appwrite-net
     depends_on:
-      - redis
-      - mariadb
+      - appwrite-redis
+      - appwrite-mariadb
+    links:
+      - appwrite-redis
+      - appwrite-mariadb
     volumes: 
       - appwrite:/storage/config:rw
       - appwrite:/storage/certificates:rw
@@ -243,6 +246,8 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+    labels:
+      - traefik.enable=false
     
   appwrite-worker-functions:
     image: appwrite/appwrite:0.7.2
