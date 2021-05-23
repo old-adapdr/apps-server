@@ -75,8 +75,8 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - apprite-redis
-      - apprite-telegraf
+      - appwrite-redis
+      - appwrite-telegraf
     environment:
       - _APP_ENV
       - _APP_REDIS_HOST
