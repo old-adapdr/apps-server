@@ -20,9 +20,14 @@ services:
       - traefik.enable=true
       # Routers
       - traefik.http.routers.appwrite.tls=true
-      - traefik.http.routers.appwrite.tls.certresolver=letsencrypt
-      - traefik.http.routers.appwrite.entrypoints=https
-      - traefik.http.routers.appwrite.rule=Host(`${DOMAIN}`)
+      # - traefik.http.routers.appwrite.tls.certresolver=letsencrypt
+      # - traefik.http.routers.appwrite.entrypoints=https
+      # - traefik.http.routers.appwrite.rule=Host(`${DOMAIN}`)
+      - traefik.constraint-label-stack=appwrite
+      - traefik.http.routers.appwrite.rule=PathPrefix(`/`)
+      - traefik.http.routers.appwrite-secure.rule=PathPrefix(`/`)
+      - traefik.http.routers.appwrite-secure.tls=true
+
     volumes:
       - ${GLOBAL_STORAGE}/appwrite:/storage/uploads:rw
       - ${GLOBAL_STORAGE}/appwrite:/storage/cache:rw
@@ -212,6 +217,33 @@ services:
       - _APP_DB_PASS
     labels:
       - traefik.enable=false
+  appwrite-worker-certificates:
+    image: appwrite/appwrite:0.7.2
+    entrypoint: worker-certificates
+    container_name: appwrite-worker-certificates
+    restart: unless-stopped
+    networks:
+      - appwrite
+    depends_on:
+      - redis
+      - mariadb
+    volumes: 
+      - appwrite:/storage/config:rw
+      - appwrite:/storage/certificates:rw
+    environment:
+      - _APP_ENV
+      - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_USER
+      - _APP_REDIS_PASS
+      - _APP_DOMAIN_TARGET
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+    
   appwrite-worker-functions:
     image: appwrite/appwrite:0.7.2
     entrypoint: worker-functions
