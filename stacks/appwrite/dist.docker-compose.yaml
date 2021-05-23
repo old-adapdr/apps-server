@@ -67,6 +67,8 @@ services:
       - _APP_FUNCTIONS_MEMORY
       - _APP_FUNCTIONS_MEMORY_SWAP
       - _APP_FUNCTIONS_ENVS
+    labels:
+      - traefik.enable=false
   appwrite-worker-usage:
     image: appwrite/appwrite:0.7.2
     entrypoint: worker-usage
@@ -85,6 +87,8 @@ services:
       - _APP_REDIS_PASS
       - _APP_STATSD_HOST
       - _APP_STATSD_PORT
+    labels:
+      - traefik.enable=false
   appwrite-worker-audits:
     image: appwrite/appwrite:0.7.2
     entrypoint: worker-audits
@@ -106,6 +110,8 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+    labels:
+      - traefik.enable=false
   appwrite-worker-webhooks:
     image: appwrite/appwrite:0.7.2
     entrypoint: worker-webhooks
@@ -128,6 +134,8 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+    labels:
+      - traefik.enable=false
   appwrite-worker-tasks:
     image: appwrite/appwrite:0.7.2
     entrypoint: worker-tasks
@@ -150,6 +158,8 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+    labels:
+      - traefik.enable=false
   appwrite-worker-deletes:
     image: appwrite/appwrite:0.7.2
     entrypoint: worker-deletes
@@ -175,6 +185,8 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
+    labels:
+      - traefik.enable=false
   appwrite-worker-functions:
     image: appwrite/appwrite:0.7.2
     entrypoint: worker-functions
@@ -206,6 +218,8 @@ services:
       - _APP_FUNCTIONS_MEMORY
       - _APP_FUNCTIONS_MEMORY_SWAP
       - _APP_USAGE_STATS
+    labels:
+      - traefik.enable=false
   appwrite-worker-mails:
     image: appwrite/appwrite:0.7.2
     entrypoint: worker-mails
@@ -228,7 +242,9 @@ services:
       - _APP_SMTP_SECURE
       - _APP_SMTP_USERNAME
       - _APP_SMTP_PASSWORD
-  
+    labels:
+      - traefik.enable=false
+
   # Internal
   appwrite-maintenance:
     image: appwrite/appwrite:0.7.2
@@ -249,6 +265,8 @@ services:
       - _APP_MAINTENANCE_RETENTION_EXECUTION
       - _APP_MAINTENANCE_RETENTION_ABUSE
       - _APP_MAINTENANCE_RETENTION_AUDIT
+    labels:
+      - traefik.enable=false
   appwrite-schedule:
     image: appwrite/appwrite:0.7.2
     entrypoint: schedule
@@ -264,7 +282,9 @@ services:
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
-  
+    labels:
+      - traefik.enable=false
+
   # Databases
   appwrite-mariadb:
     image: appwrite/mariadb:1.2.0 # fix issues when upgrading using: mysql_upgrade -u root -p
@@ -280,6 +300,8 @@ services:
       - MYSQL_USER=${_APP_DB_USER}
       - MYSQL_PASSWORD=${_APP_DB_PASS}
     command: 'mysqld --innodb-flush-method=fsync'
+    labels:
+      - traefik.enable=false
   appwrite-redis:
     image: redis:6.0-alpine3.12
     container_name: appwrite-redis
@@ -288,6 +310,8 @@ services:
       - appwrite-net
     volumes:
       - ${GLOBAL_STORAGE}/appwrite:/data:rw
+    labels:
+      - traefik.enable=false
   appwrite-clamav:
     image: appwrite/clamav:1.2.0
     container_name: appwrite-clamav
@@ -296,6 +320,8 @@ services:
       - appwrite-net
     volumes:
       - ${GLOBAL_STORAGE}/appwrite:/storage/uploads
+    labels:
+      - traefik.enable=false
   appwrite-influxdb:
     image: influxdb:1.8-alpine
     container_name: appwrite-influxdb
@@ -304,13 +330,16 @@ services:
       - appwrite-net
     volumes:
       - ${GLOBAL_STORAGE}/appwrite:/var/lib/influxdb:rw
+    labels:
+      - traefik.enable=false
   appwrite-telegraf:
     image: appwrite/telegraf:1.0.0
     container_name: appwrite-telegraf
     restart: unless-stopped
     networks:
       - appwrite-net
-
+    labels:
+      - traefik.enable=false
 networks:
     proxy:
         external: true
