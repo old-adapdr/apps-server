@@ -1,5 +1,12 @@
 version: '3'
 
+networks:
+  proxy:
+    external: true
+  appwrite-net:
+    name: appwrite-net
+    external: false
+
 services: 
   # Main & Workers
   appwrite:
@@ -338,9 +345,3 @@ services:
       - appwrite-net
     labels:
       - traefik.enable=false
-networks:
-    proxy:
-        external: true
-    appwrite-net:
-      name: appwrite-net
-      external: false
