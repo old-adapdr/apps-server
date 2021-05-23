@@ -23,10 +23,10 @@ services:
       - ${GLOBAL_STORAGE}/appwrite:/storage/certificates:rw
       - ${GLOBAL_STORAGE}/appwrite:/storage/functions:rw
     depends_on:
-      - mariadb
-      - redis
-      - clamav
-      - influxdb
+      - appwrite-mariadb
+      - appwrite-redis
+      - appwrite-clamav
+      - appwrite-influxdb
     environment:
       - _APP_ENV
       - _APP_CONSOLE_WHITELIST_EMAILS
@@ -75,8 +75,8 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - redis
-      - telegraf
+      - apprite-redis
+      - apprite-telegraf
     environment:
       - _APP_ENV
       - _APP_REDIS_HOST
@@ -93,8 +93,8 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - redis
-      - mariadb
+      - appwrite-redis
+      - appwrite-mariadb
     environment:
       - _APP_ENV
       - _APP_REDIS_HOST
@@ -114,8 +114,8 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - redis
-      - mariadb
+      - appwrite-redis
+      - appwrite-mariadb
     environment:
       - _APP_ENV
       - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
@@ -136,8 +136,8 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - redis
-      - mariadb
+      - appwrite-redis
+      - appwrite-mariadb
     environment:
       - _APP_ENV
       - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
@@ -158,8 +158,8 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - redis
-      - mariadb
+      - appwrite-redis
+      - appwrite-mariadb
     volumes: 
       - ${GLOBAL_STORAGE}/appwrite:/storage/uploads:rw
       - ${GLOBAL_STORAGE}/appwrite:/storage/cache:rw
@@ -183,8 +183,8 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - redis
-      - mariadb
+      - appwrite-redis
+      - appwrite-mariadb
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${GLOBAL_STORAGE}/appwrite:/storage/functions:rw
@@ -214,7 +214,7 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - redis
+      - appwrite-redis
     environment:
       - _APP_ENV
       - _APP_SYSTEM_EMAIL_NAME
@@ -238,7 +238,7 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - redis
+      - appwrite-redis
     environment:
       - _APP_ENV
       - _APP_REDIS_HOST
@@ -257,7 +257,7 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - redis
+      - appwrite-redis
     environment:
       - _APP_ENV
       - _APP_REDIS_HOST
