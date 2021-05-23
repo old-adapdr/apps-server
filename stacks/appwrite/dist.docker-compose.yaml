@@ -34,6 +34,11 @@ services:
       - appwrite-redis
       - appwrite-clamav
       - appwrite-influxdb
+    links:
+      - appwrite-mariadb
+      - appwrite-redis
+      - appwrite-clamav
+      - appwrite-influxdb
     environment:
       - _APP_ENV
       - _APP_CONSOLE_WHITELIST_EMAILS
@@ -84,6 +89,9 @@ services:
     depends_on:
       - appwrite-redis
       - appwrite-telegraf
+    links:
+      - appwrite-redis
+      - appwrite-telegraf
     environment:
       - _APP_ENV
       - _APP_REDIS_HOST
@@ -102,6 +110,9 @@ services:
     networks:
       - appwrite-net
     depends_on:
+      - appwrite-redis
+      - appwrite-mariadb
+    links:
       - appwrite-redis
       - appwrite-mariadb
     environment:
@@ -125,6 +136,9 @@ services:
     networks:
       - appwrite-net
     depends_on:
+      - appwrite-redis
+      - appwrite-mariadb
+    links:
       - appwrite-redis
       - appwrite-mariadb
     environment:
@@ -151,6 +165,9 @@ services:
     depends_on:
       - appwrite-redis
       - appwrite-mariadb
+    links:
+      - appwrite-redis
+      - appwrite-mariadb
     environment:
       - _APP_ENV
       - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
@@ -173,6 +190,9 @@ services:
     networks:
       - appwrite-net
     depends_on:
+      - appwrite-redis
+      - appwrite-mariadb
+    links:
       - appwrite-redis
       - appwrite-mariadb
     volumes: 
@@ -200,6 +220,9 @@ services:
     networks:
       - appwrite-net
     depends_on:
+      - appwrite-redis
+      - appwrite-mariadb
+    links:
       - appwrite-redis
       - appwrite-mariadb
     volumes:
@@ -233,6 +256,8 @@ services:
     networks:
       - appwrite-net
     depends_on:
+      - appwrite-redis
+    links:
       - appwrite-redis
     environment:
       - _APP_ENV
