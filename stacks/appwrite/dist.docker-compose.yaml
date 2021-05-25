@@ -1,48 +1,29 @@
 version: '3.7'
 
-networks:
-  proxy:
-    external: true
-  appwrite-net:
-    name: appwrite-net
-    external: false
-
 services: 
   # Main & Workers
   appwrite:
     image: appwrite/appwrite:0.8.0
     container_name: appwrite
     restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/uploads:/storage/uploads:rw
+      - ${GLOBAL_STORAGE}/appwrite/config:/storage/config:rw
+      - ${GLOBAL_STORAGE}/appwrite:/storage/functions:rw
+      - appwrite-certificates:/storage/certificates:rw
+      - appwrite-cache:/storage/cache:rw
     networks:
       - proxy
       - appwrite-net
     labels:
       - traefik.enable=true
-      # Routers
       - traefik.http.routers.appwrite.tls=true
-      # - traefik.http.routers.appwrite.tls.certresolver=letsencrypt
-      # - traefik.http.routers.appwrite.entrypoints=https
-      # - traefik.http.routers.appwrite.rule=Host(`${DOMAIN}`)
-      - traefik.constraint-label-stack=appwrite
-      - traefik.http.routers.appwrite.rule=PathPrefix(`/`)
-      - traefik.http.routers.appwrite-secure.rule=PathPrefix(`/`)
-      - traefik.http.routers.appwrite-secure.tls=true
-
-    volumes:
-      - ${GLOBAL_STORAGE}/appwrite:/storage/uploads:rw
-      - ${GLOBAL_STORAGE}/appwrite:/storage/cache:rw
-      - ${GLOBAL_STORAGE}/appwrite:/storage/config:rw
-      - ${GLOBAL_STORAGE}/appwrite:/storage/certificates:rw
-      - ${GLOBAL_STORAGE}/appwrite:/storage/functions:rw
+      - traefik.http.routers.appwrite.tls.certresolver=letsencrypt
+      - traefik.http.routers.appwrite.entrypoints=https
+      - traefik.http.routers.appwrite.rule=Host(`${DOMAIN}`)
     depends_on:
       - appwrite-mariadb
       - appwrite-redis
-      - appwrite-clamav
-      - appwrite-influxdb
-    links:
-      - appwrite-mariadb
-      - appwrite-redis
-      - appwrite-clamav
       - appwrite-influxdb
     environment:
       - _APP_ENV
@@ -91,10 +72,9 @@ services:
     restart: unless-stopped
     networks:
       - appwrite-net
+    labels:
+      - traefik.enable=false
     depends_on:
-      - appwrite-redis
-      - appwrite-telegraf
-    links:
       - appwrite-redis
       - appwrite-telegraf
     environment:
@@ -105,8 +85,6 @@ services:
       - _APP_REDIS_PASS
       - _APP_STATSD_HOST
       - _APP_STATSD_PORT
-    labels:
-      - traefik.enable=false
   appwrite-worker-audits:
     image: appwrite/appwrite:0.8.0
     entrypoint: worker-audits
@@ -114,10 +92,9 @@ services:
     restart: unless-stopped
     networks:
       - appwrite-net
+    labels:
+      - traefik.enable=false
     depends_on:
-      - appwrite-redis
-      - appwrite-mariadb
-    links:
       - appwrite-redis
       - appwrite-mariadb
     environment:
@@ -131,8 +108,6 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
-    labels:
-      - traefik.enable=false
   appwrite-worker-webhooks:
     image: appwrite/appwrite:0.8.0
     entrypoint: worker-webhooks
@@ -141,9 +116,6 @@ services:
     networks:
       - appwrite-net
     depends_on:
-      - appwrite-redis
-      - appwrite-mariadb
-    links:
       - appwrite-redis
       - appwrite-mariadb
     environment:
@@ -167,10 +139,9 @@ services:
     restart: unless-stopped
     networks:
       - appwrite-net
+    labels:
+      - traefik.enable=false
     depends_on:
-      - appwrite-redis
-      - appwrite-mariadb
-    links:
       - appwrite-redis
       - appwrite-mariadb
     environment:
@@ -185,25 +156,22 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
-    labels:
-      - traefik.enable=false
   appwrite-worker-deletes:
     image: appwrite/appwrite:0.8.0
     entrypoint: worker-deletes
     container_name: appwrite-worker-deletes
     restart: unless-stopped
+    volumes: 
+      - ${GLOBAL_STORAGE}/appwrite/uploads:/storage/uploads:rw
+      - appwrite-cache:/storage/cache:rw
+      - appwrite-certificates:/storage/certificates:rw
     networks:
       - appwrite-net
+    labels:
+      - traefik.enable=false
     depends_on:
       - appwrite-redis
       - appwrite-mariadb
-    links:
-      - appwrite-redis
-      - appwrite-mariadb
-    volumes: 
-      - ${GLOBAL_STORAGE}/appwrite:/storage/uploads:rw
-      - ${GLOBAL_STORAGE}/appwrite:/storage/cache:rw
-      - ${GLOBAL_STORAGE}/appwrite:/storage/certificates:rw
     environment:
       - _APP_ENV
       - _APP_REDIS_HOST
@@ -215,24 +183,21 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
-    labels:
-      - traefik.enable=false
   appwrite-worker-certificates:
     image: appwrite/appwrite:0.8.0
     entrypoint: worker-certificates
     container_name: appwrite-worker-certificates
     restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/config:/storage/config:rw
+      - appwrite-certificates:/storage/certificates:rw
     networks:
       - appwrite-net
+    labels:
+      - traefik.enable=false
     depends_on:
       - appwrite-redis
       - appwrite-mariadb
-    links:
-      - appwrite-redis
-      - appwrite-mariadb
-    volumes: 
-      - ${GLOBAL_STORAGE}/appwrite:/storage/config:rw
-      - ${GLOBAL_STORAGE}/appwrite:/storage/certificates:rw
     environment:
       - _APP_ENV
       - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
@@ -246,26 +211,23 @@ services:
       - _APP_DB_SCHEMA
       - _APP_DB_USER
       - _APP_DB_PASS
-    labels:
-      - traefik.enable=false
-    
   appwrite-worker-functions:
     image: appwrite/appwrite:0.8.0
     entrypoint: worker-functions
     container_name: appwrite-worker-functions
     restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite:/storage/functions:rw
+      - /var/run/docker.sock:/var/run/docker.sock
+    # Required for unknown reason
+      - /tmp:/tmp:rw
     networks:
       - appwrite-net
+    labels:
+      - traefik.enable=false
     depends_on:
       - appwrite-redis
       - appwrite-mariadb
-    links:
-      - appwrite-redis
-      - appwrite-mariadb
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${GLOBAL_STORAGE}/appwrite:/storage/functions:rw
-      - ${GLOBAL_STORAGE}/appwrite/tmp:/tmp:rw
     environment:
       - _APP_ENV
       - _APP_REDIS_HOST
@@ -283,8 +245,6 @@ services:
       - _APP_FUNCTIONS_MEMORY
       - _APP_FUNCTIONS_MEMORY_SWAP
       - _APP_USAGE_STATS
-    labels:
-      - traefik.enable=false
   appwrite-worker-mails:
     image: appwrite/appwrite:0.8.0
     entrypoint: worker-mails
@@ -292,9 +252,9 @@ services:
     restart: unless-stopped
     networks:
       - appwrite-net
+    labels:
+      - traefik.enable=false
     depends_on:
-      - appwrite-redis
-    links:
       - appwrite-redis
     environment:
       - _APP_ENV
@@ -309,8 +269,6 @@ services:
       - _APP_SMTP_SECURE
       - _APP_SMTP_USERNAME
       - _APP_SMTP_PASSWORD
-    labels:
-      - traefik.enable=false
 
   # Internal
   appwrite-maintenance:
@@ -320,9 +278,9 @@ services:
     restart: unless-stopped
     networks:
       - appwrite-net
+    labels:
+      - traefik.enable=false
     depends_on:
-      - appwrite-redis
-    links:
       - appwrite-redis
     environment:
       - _APP_ENV
@@ -334,8 +292,6 @@ services:
       - _APP_MAINTENANCE_RETENTION_EXECUTION
       - _APP_MAINTENANCE_RETENTION_ABUSE
       - _APP_MAINTENANCE_RETENTION_AUDIT
-    labels:
-      - traefik.enable=false
   appwrite-schedule:
     image: appwrite/appwrite:0.8.0
     entrypoint: schedule
@@ -343,9 +299,9 @@ services:
     restart: unless-stopped
     networks:
       - appwrite-net
+    labels:
+      - traefik.enable=false
     depends_on:
-      - appwrite-redis
-    links:
       - appwrite-redis
     environment:
       - _APP_ENV
@@ -353,54 +309,43 @@ services:
       - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS
-    labels:
-      - traefik.enable=false
 
   # Databases
   appwrite-mariadb:
     image: appwrite/mariadb:1.2.0 # fix issues when upgrading using: mysql_upgrade -u root -p
     container_name: appwrite-mariadb
     restart: unless-stopped
+    command: 'mysqld --innodb-flush-method=fsync'
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/mariadb:/var/lib/mysql:rw
     networks:
       - appwrite-net
-    volumes:
-      - ${GLOBAL_STORAGE}/appwrite:/var/lib/mysql:rw
+    labels:
+      - traefik.enable=false
     environment:
       - MYSQL_ROOT_PASSWORD=rootsecretpassword
       - MYSQL_DATABASE=${_APP_DB_SCHEMA}
       - MYSQL_USER=${_APP_DB_USER}
       - MYSQL_PASSWORD=${_APP_DB_PASS}
-    command: 'mysqld --innodb-flush-method=fsync'
-    labels:
-      - traefik.enable=false
+
   appwrite-redis:
     image: redis:6.0-alpine3.12
     container_name: appwrite-redis
     restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/redis:/data:rw
     networks:
       - appwrite-net
-    volumes:
-      - ${GLOBAL_STORAGE}/appwrite:/data:rw
-    labels:
-      - traefik.enable=false
-  appwrite-clamav:
-    image: appwrite/clamav:1.2.0
-    container_name: appwrite-clamav
-    restart: unless-stopped
-    networks:
-      - appwrite-net
-    volumes:
-      - ${GLOBAL_STORAGE}/appwrite:/storage/uploads
     labels:
       - traefik.enable=false
   appwrite-influxdb:
     image: influxdb:1.8-alpine
     container_name: appwrite-influxdb
     restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/influxdb:/var/lib/influxdb:rw
     networks:
       - appwrite-net
-    volumes:
-      - ${GLOBAL_STORAGE}/appwrite:/var/lib/influxdb:rw
     labels:
       - traefik.enable=false
   appwrite-telegraf:
@@ -411,3 +356,14 @@ services:
       - appwrite-net
     labels:
       - traefik.enable=false
+
+networks:
+  proxy:
+    external: true
+  appwrite-net:
+    name: appwrite-net
+    external: false
+
+volumes:
+  appwrite-cache:
+  appwrite-certificates:
