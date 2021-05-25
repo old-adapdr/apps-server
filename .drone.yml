@@ -17,6 +17,6 @@ steps:
   - cd $ROOT_PATH && python3 deploy.py
   when:
     branch:
-    - main
+    - deployment
     event:
     - push
