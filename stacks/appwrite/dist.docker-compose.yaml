@@ -7,9 +7,9 @@ services:
     container_name: appwrite
     restart: unless-stopped
     volumes:
-      - ${GLOBAL_STORAGE}/appwrite/uploads:/storage/uploads:rw
-      - ${GLOBAL_STORAGE}/appwrite/config:/storage/config:rw
-      - ${GLOBAL_STORAGE}/appwrite:/storage/functions:rw
+      - appwrite-config:/storage/config:rw
+      - appwrite-functions:/storage/functions:rw
+      - appwrite-uploads:/storage/uploads:rw
       - appwrite-certificates:/storage/certificates:rw
       - appwrite-cache:/storage/cache:rw
     networks:
@@ -162,7 +162,7 @@ services:
     container_name: appwrite-worker-deletes
     restart: unless-stopped
     volumes: 
-      - ${GLOBAL_STORAGE}/appwrite/uploads:/storage/uploads:rw
+      - appwrite-uploads:/storage/uploads:rw
       - appwrite-cache:/storage/cache:rw
       - appwrite-certificates:/storage/certificates:rw
     networks:
@@ -189,7 +189,7 @@ services:
     container_name: appwrite-worker-certificates
     restart: unless-stopped
     volumes:
-      - ${GLOBAL_STORAGE}/appwrite/config:/storage/config:rw
+      - appwrite-config:/storage/config:rw
       - appwrite-certificates:/storage/certificates:rw
     networks:
       - appwrite-net
@@ -217,9 +217,8 @@ services:
     container_name: appwrite-worker-functions
     restart: unless-stopped
     volumes:
-      - ${GLOBAL_STORAGE}/appwrite:/storage/functions:rw
+      - appwrite-functions:/storage/functions:rw
       - /var/run/docker.sock:/var/run/docker.sock
-    # Required for unknown reason
       - /tmp:/tmp:rw
     networks:
       - appwrite-net
@@ -317,7 +316,7 @@ services:
     restart: unless-stopped
     command: 'mysqld --innodb-flush-method=fsync'
     volumes:
-      - ${GLOBAL_STORAGE}/appwrite/mariadb:/var/lib/mysql:rw
+      - appwrite-mariadb:/var/lib/mysql:rw
     networks:
       - appwrite-net
     labels:
@@ -327,13 +326,12 @@ services:
       - MYSQL_DATABASE=${_APP_DB_SCHEMA}
       - MYSQL_USER=${_APP_DB_USER}
       - MYSQL_PASSWORD=${_APP_DB_PASS}
-
   appwrite-redis:
     image: redis:6.0-alpine3.12
     container_name: appwrite-redis
     restart: unless-stopped
     volumes:
-      - ${GLOBAL_STORAGE}/appwrite/redis:/data:rw
+      - appwrite-redis:/data:rw
     networks:
       - appwrite-net
     labels:
@@ -343,7 +341,7 @@ services:
     container_name: appwrite-influxdb
     restart: unless-stopped
     volumes:
-      - ${GLOBAL_STORAGE}/appwrite/influxdb:/var/lib/influxdb:rw
+      - appwrite-influxdb:/var/lib/influxdb:rw
     networks:
       - appwrite-net
     labels:
@@ -366,4 +364,10 @@ networks:
 
 volumes:
   appwrite-cache:
+  appwrite-config:
+  appwrite-uploads:
   appwrite-certificates:
+  appwrite-redis:
+  appwrite-mariadb:
+  appwrite-influxdb:
+  appwrite-functions:
