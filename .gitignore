@@ -1,4 +1,5 @@
 # Production files
-*/docker-compose.yaml
-*/acme.json
-*/.env
+*traefik.yaml
+*docker-compose.yaml
+*acme.json
+*.env
