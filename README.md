@@ -29,17 +29,28 @@ The templates are grouped into three types:
 
 
 ## Setup
+Please note that all `DOMAIN` variables are **without HTTP prefix**, so just the domain. Ex: `bitwarden.hs.example.com`
+
 ### Pre-reqs
 - DNS `A` record with a wildcard `sub.domain.tld` pointing towards the server
+- Domain & global storage `.env` variables are **required** for the gateway and letsencrypt to work
 - A server with at least 2 core CPU and 4GB of RAM
     - Note: Start-up may require more RAM or slow-down with only 2 cores/CPUs
     - Note: Varies depending on load, usage and number of services currently running
     - Note: Once deployed, all current services requires ~2.1GB of RAM
 
-### Requirements
 
 
-## Notes
-- Requires a `*.sub.domaim.com` pointing towards the node
-- All `DOMAIN` variables are **without HTTP prefix. Just. The. Domain.**
-- Any number of domains can be pointed towards the node and have certs generated
+### Configuration
+The gateway detects and auto-adds new services as they're deployed so it should be deployed first with either option!
+
+**Auto-deploy**
+1. Read `deploy.py` to see what it does
+2. Setup with `python3 deploy.py`
+3. Deploy with `python3 deploy.py --ARG`, args=["core", "services", "stacks", "all"]
+
+**Manual**
+1. Copy `dist.env` and `dist.docker-compose.yml` files for core with your preferred configuration
+2. Pull and start core services with `docker-compose up` from the service directory and verify that they're running (with letsencrypt provided SSL certs)
+3. Copy `dist.env` and `dist.docker-compose.yml` files for your preferred service/stack setup
+4. Pull and start preferred services with `docker-compose up -d` from the serviec directory.
