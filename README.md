@@ -1,6 +1,4 @@
 # Home (development) Server
-[![Build Status](https://drone.hs.alexpdr.com/api/badges/alexpdr/hs/status.svg)](https://drone.hs.alexpdr.com/alexpdr/hs)
-
 Open-source fueled apps, services and tools for a self hosting & development.
 
 
