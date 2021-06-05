@@ -67,7 +67,7 @@ def deploy(root_path: str, prefix: str, setup_only: bool = True):
 argument_parser.add_argument("--core", "Set true to deploy core only")
 argument_parser.add_argument("--services", "Set true to deploy services only")
 argument_parser.add_argument("--stacks", "Set true to deploy stacks only")
-argument_parser.add_argument("--deploy", "Set true to deploy all available")
+argument_parser.add_argument("--all", "Set true to deploy all available")
 
 # Parse arguements
 args = argument_parser.parse_args()
@@ -79,7 +79,7 @@ elif args.services:  # Deploy services
     deploy(root_path=root_path, prefix=prefix_services, setup_only=False)
 elif args.stacks:  # Deploy stacks
     deploy(root_path=root_path, prefix=prefix_stacks, setup_only=False)
-elif args.deploy:  # Deploy all
+elif args.all:  # Deploy all
     deploy(root_path=root_path, prefix=prefix_core, setup_only=False)
     deploy(root_path=root_path, prefix=prefix_services, setup_only=False)
     deploy(root_path=root_path, prefix=prefix_stacks, setup_only=False)
