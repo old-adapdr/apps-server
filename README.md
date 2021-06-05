@@ -38,7 +38,7 @@ The templates are grouped into three types:
 ### Requirements
 - Note all `DOMAIN` variables are **without HTTP(S) prefix!**
     - Valid domain: `bitwarden.hs.example.com`
-    - Invalid doman: `https://hs.example.com`
+    - Invalid doman: `https://bitwarden.hs.example.com`
 
 - DNS `A` record with a wildcard `sub.domain.tld` pointing towards the server
 - Domain & global storage `.env` variables are **required** for the gateway and letsencrypt to work
