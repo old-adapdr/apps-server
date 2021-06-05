@@ -31,9 +31,12 @@ The templates are grouped into three types:
 
 
 ## Setup
-Please note that all `DOMAIN` variables are **without HTTP prefix**, so just the domain. Ex: `bitwarden.hs.example.com`
+<img src="https://images.unsplash.com/photo-1595776613215-fe04b78de7d0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" width="600">
+<!-- Thanks to unsplash and https://unsplash.com/@walling for royalty free stock photos! -->
 
-### Pre-reqs
+Please note that all `DOMAIN` variables are **without HTTP prefix**, so just the domain. Example: `bitwarden.hs.example.com`
+
+### Requirements
 - DNS `A` record with a wildcard `sub.domain.tld` pointing towards the server
 - Domain & global storage `.env` variables are **required** for the gateway and letsencrypt to work
 - A server with at least 2 core CPU and 4GB of RAM
@@ -43,15 +46,15 @@ Please note that all `DOMAIN` variables are **without HTTP prefix**, so just the
 
 
 
-### Configuration
+### Configuration & Deployment
 The gateway detects and auto-adds new services as they're deployed so it should be deployed first with either option!
 
-**Auto-deploy**
+**Automatic deployment**
 1. Read `deploy.py` to see what it does
 2. Setup with `python3 deploy.py`
 3. Deploy with `python3 deploy.py --ARG`, args=["core", "services", "stacks", "all"]
 
-**Manual**
+**Manual deployment**
 1. Copy `dist.env` and `dist.docker-compose.yml` files for core with your preferred configuration
 2. Pull and start core services with `docker-compose up` from the service directory and verify that they're running (with letsencrypt provided SSL certs)
 3. Copy `dist.env` and `dist.docker-compose.yml` files for your preferred service/stack setup
