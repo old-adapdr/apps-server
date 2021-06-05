@@ -34,16 +34,18 @@ The templates are grouped into three types:
 <img src="https://images.unsplash.com/photo-1595776613215-fe04b78de7d0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" width="600">
 <!-- Thanks to unsplash and https://unsplash.com/@walling for royalty free stock photos! -->
 
-Please note that all `DOMAIN` variables are **without HTTP prefix**, so just the domain. Example: `bitwarden.hs.example.com`
 
 ### Requirements
+- Note all `DOMAIN` variables are **without HTTP(S) prefix!**
+    - Valid domain: `bitwarden.hs.example.com`
+    - Invalid doman: `https://hs.example.com`
+
 - DNS `A` record with a wildcard `sub.domain.tld` pointing towards the server
 - Domain & global storage `.env` variables are **required** for the gateway and letsencrypt to work
 - A server with at least 2 core CPU and 4GB of RAM
     - Note: Start-up may require more RAM or slow-down with only 2 cores/CPUs
     - Note: Varies depending on load, usage and number of services currently running
     - Note: Once deployed, all current services requires ~2.1GB of RAM
-
 
 
 ### Configuration & Deployment
