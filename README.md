@@ -1,5 +1,5 @@
 # Home (development) Server
-<img src="https://images.unsplash.com/photo-1546124404-9e7e3cac2ec1?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1" width="500">
+<img src="https://images.unsplash.com/photo-1546124404-9e7e3cac2ec1?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1" width="600">
 <!-- Thanks to unsplash and https://unsplash.com/@isodme for royalty free stock photos! -->
 
 
