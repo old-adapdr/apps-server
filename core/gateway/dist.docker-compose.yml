@@ -1,0 +1,38 @@
+
+version: "3.7"
+
+services:
+  traefik:
+    image: traefik:v2.4
+    container_name: traefik
+    restart: unless-stopped
+    command: --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
+    environment: 
+      - TRAEFIK_PILOT_TOKEN=${PILOT_TOKEN}
+      - TRAEFIK_LOG=true
+      - TRAEFIK_LOG_FILEPATH=${GLOBAL_STORAGE}/traefik/traefik.log
+      - TRAEFIK_ACCESSLOG=true
+      - TRAEFIK_ACCESSLOG_FILEPATH=${GLOBAL_STORAGE}/traefik/access.log
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config.yaml:/etc/traefik/traefik.yaml
+      - ${GLOBAL_STORAGE}/ssl/acme.json:/etc/traefik/acme.json
+    labels:
+      # HTTP
+      - traefik.http.routers.traefik-http.service=api@internal
+      - traefik.http.routers.traefik-http.entrypoints=http
+      - traefik.http.routers.traefik-http.rule=Host(`${DOMAIN}`)
+      # HTTPS
+      - traefik.http.routers.traefik-https.tls=true
+      - traefik.http.routers.traefik-https.service=api@internal
+      - traefik.http.routers.traefik-https.entrypoints=https
+      - traefik.http.routers.traefik-https.rule=Host(`${DOMAIN}`)
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    name: proxy
