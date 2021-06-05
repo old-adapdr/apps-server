@@ -1,4 +1,8 @@
 # Home (development) Server
+<img src="https://images.unsplash.com/photo-1546124404-9e7e3cac2ec1?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1" width="500">
+<!-- Thanks to unsplash and https://unsplash.com/@isodme for royalty free stock photos! -->
+
+
 Open-source fueled apps, services and tools for a self hosting & development.
 
 
