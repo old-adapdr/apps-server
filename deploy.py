@@ -14,7 +14,7 @@ root_path = getenv("ROOT_PATH")
 prefix_core = "/core"
 prefix_services = "/services"
 prefix_stacks = "/stacks"
-prefix_ssl = "/ssl"
+prefix_ssl = "/resources/ssl"
 
 
 def deploy(root_path: str, prefix: str, setup_only: bool = True):
