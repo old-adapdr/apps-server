@@ -13,21 +13,21 @@ The templates are grouped into three types:
 - `stacks`: Multi-service templates
 
 **Core**
-- `traefik`: Container native proxy & service gateway
-- `portainer`: Container native monitoring and administration interface
+- `gateway` | `traefik`: Container native proxy & service gateway
+- `admin` | `portainer`: Container native monitoring and administration interface
 
 **Services**:
-- `bitwarden_rs`: Open-source rust implementation of the password manager bitwarden
-- `minio`: Open-source object storage
-- `n8n`: Open-source integration & flow based automation tool
+- `vault` | `vaultwarden`: Open-source rust implementation of the password manager bitwarden
+- `storage` | `minio`: Open-source object storage
+- `automations` | `n8n`: Open-source integration & flow based automation tool
 - `registry`: Docker container registry
 - `ctc`: Container Test Case to confirm deployment & letsencrypt certificate generation
   
 **Stacks**:
-- `drone`: Open-source CI/CD pipeline and deployment powered by community integrations
-- `nextcloud`: Open-source GCloud/Dropbox alternative
-- `ghost`: Open-source publication tool and wordpress alternative
-- `matomo`: Open-source GDPR compliant analytics platform
+- `ci` | `drone`: Open-source CI/CD pipeline and deployment powered by community integrations
+- `cloud` | `nextcloud`: Open-source GCloud/Dropbox alternative
+- `writeups` | `ghost`: Open-source publication tool and wordpress alternative
+- `analytics` | `matomo`: Open-source GDPR compliant analytics platform
 
 
 ## Setup
@@ -37,8 +37,8 @@ The templates are grouped into three types:
 
 ### Requirements
 - Note all `DOMAIN` variables are **without HTTP(S) prefix!**
-    - Valid domain: `bitwarden.hs.example.com`
-    - Invalid doman: `https://bitwarden.hs.example.com`
+    - Valid domain: `vault.hs.example.com`
+    - Invalid doman: `https://vault.hs.example.com`
 
 - DNS `A` record with a wildcard `sub.domain.tld` pointing towards the server
 - Domain & global storage `.env` variables are **required** for the gateway and letsencrypt to work
