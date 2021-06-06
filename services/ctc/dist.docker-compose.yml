@@ -3,7 +3,7 @@ version: "3.7"
 
 services:
   ctc:
-    container_name: ctc
+    container_name: service-ctc
     image: alexpdr/ctc:latest
     restart: unless-stopped
     labels:

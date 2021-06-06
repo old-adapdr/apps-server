@@ -4,7 +4,7 @@ version: "3.7"
 services:
   registry:
     image: registry:latest
-    container_name: registry
+    container_name: service-registry
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/registry:/data

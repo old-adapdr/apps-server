@@ -1,0 +1,53 @@
+
+version: "3.7"
+
+services:
+  ci:
+    image: drone/drone:latest
+    container_name: stack-ci
+    restart: unless-stopped
+    environment:
+      - DRONE_GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - DRONE_GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - DRONE_RPC_SECRET=${RPC_SECRET}
+      - DRONE_SERVER_HOST=${DOMAIN_CI}
+      - DRONE_SERVER_PROTO=https
+      - DRONE_TLS_AUTOCERT=true
+    volumes:
+      - ${GLOBAL_STORAGE}/ci/server:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ci.tls=true
+      - traefik.http.routers.ci.tls.certresolver=letsencrypt
+      - traefik.http.routers.ci.entrypoints=https
+      - traefik.http.routers.ci.rule=Host(`${DOMAIN_CI}`)
+    networks:
+      - proxy
+
+  ci-runner:
+    image: drone/drone-runner-docker:latest
+    container_name: stack-ci-runner
+    restart: unless-stopped
+    environment:
+      - DRONE_RPC_PROTO=https
+      - DRONE_RPC_HOST=${DOMAIN_CI}
+      - DRONE_RPC_SECRET=${RPC_SECRET}
+      - DRONE_RUNNER_NAME=ci-runner
+      - DRONE_RUNNER_CAPACITY=2
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${GLOBAL_STORAGE}/ci/runner:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ci-runner.tls=true
+      - traefik.http.routers.ci-runner.tls.certresolver=letsencrypt
+      - traefik.http.routers.ci-runner.entrypoints=https
+      - traefik.http.routers.ci-runner.rule=Host(`${DOMAIN_RUNNER}`)
+    networks:
+      - proxy
+    depends_on:
+      - ci
+
+networks:
+  proxy:
+    external: true

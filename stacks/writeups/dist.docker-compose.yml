@@ -1,0 +1,56 @@
+
+version: "3.7"
+
+
+
+services:
+  writeups-db:
+    image: mariadb:latest
+    container_name: stack-writeups-db
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/writeups/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${DB_DB}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+    networks:
+      - writeups-net
+    labels:
+      - traefik.enable=false
+
+  writeups:
+    image: ghost:4.4-alpine
+    container_name: stack-writeups
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/writeups/main:/var/lib/ghost/content
+    environment:
+      - url=https://${DOMAIN}
+      - database__client=mysql
+      - database__connection__host=writeups-db
+      - database__connection__database=${DB_DB}
+      - database__connection__user=${DB_USER}
+      - database__connection__password=${DB_PASS}
+    links:
+      - writeups-db
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.writeups.tls=true
+      - traefik.http.routers.writeups.tls.certresolver=letsencrypt
+      - traefik.http.routers.writeups.entrypoints=https
+      - traefik.http.routers.writeups.rule=Host(`${DOMAIN}`)
+      - traefik.port=2368
+    networks:
+      - proxy
+      - writeups-net
+    depends_on:
+      - writeups-db
+
+networks:
+  writeups-net:
+    name: writeups-net
+    external: false
+  proxy:
+    external: true

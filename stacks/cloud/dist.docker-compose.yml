@@ -1,0 +1,81 @@
+
+version: "3.7"
+
+services:
+  cloud-db:
+    container_name: stack-cloud-db
+    image: mariadb:latest
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/cloud/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=cloud
+      - MYSQL_USER=cloud
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+    networks:
+      - cloud-net
+    labels:
+      - traefik.enable=false
+
+  cloud-cache:
+    image: redis:6-alpine
+    container_name: stack-cloud-cache
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/cloud/redis:/data
+    networks:
+      - cloud-net
+    labels:
+      - traefik.enable=false
+
+  cloud:
+    image: nextcloud:latest
+    container_name: stack-cloud
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/cloud/html:/var/www/html
+    environment:
+      - APACHE_DISABLE_REWRITE_IP=1
+      - TRUSTED_PROXIES=${TRUSTED_PROXIES}
+      - MYSQL_HOST=cloud-db
+      - MYSQL_DATABASE=${DB_DB}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - REDIS_HOST=cloud-cache
+    links:
+      - cloud-db
+      - cloud-cache
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.cloud.tls=true
+      - traefik.http.routers.cloud.tls.certresolver=letsencrypt
+      - traefik.http.routers.cloud.entrypoints=https
+      - traefik.http.routers.cloud.rule=Host(`${DOMAIN}`)
+      # Middleware
+      - traefik.http.middlewares.cloud.headers.customFrameOptionsValue=SAMEORIGIN
+      - traefik.http.middlewares.cloud.headers.framedeny=true
+      - traefik.http.middlewares.cloud.headers.sslredirect=true
+      - traefik.http.middlewares.cloud.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.cloud.headers.STSPreload=true
+      - traefik.http.middlewares.cloud.headers.STSSeconds=315360000
+      - traefik.http.middlewares.cloud.headers.forceSTSHeader=true
+      - "traefik.http.middlewares.cloud-caldav.redirectregex.permanent=true"
+      - "traefik.http.middlewares.cloud-caldav.redirectregex.regex=^https://(.*)/.well-known/(card|cal)dav"
+      - "traefik.http.middlewares.cloud-caldav.redirectregex.replacement=https://$${1}/remote.php/dav/"
+      # Router <-> Middleware
+      - traefik.http.routers.cloud.middlewares=cloud,cloud-caldav
+    networks:
+      - proxy
+      - nextcloud-net
+    depends_on:
+      - cloud-db
+      - cloud-cache
+
+networks:
+  cloud-net:
+    name: cloud-net
+    external: false
+  proxy:
+    external: true

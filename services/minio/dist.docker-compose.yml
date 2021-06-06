@@ -2,16 +2,16 @@
 version: "3.7"
 
 services:
-  minio:
+  storage:
     image: minio/minio:latest
-    container_name: minio
+    container_name: service-storage
     restart: unless-stopped
     command: server /data
     environment:
       - MINIO_ROOT_USER=${ROOT_USER}
       - MINIO_ROOT_PASSWORD=${ROOT_PASS}
     volumes:
-      - ${GLOBAL_STORAGE}/minio:/data
+      - ${GLOBAL_STORAGE}/storage:/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -19,10 +19,10 @@ services:
       retries: 3
     labels:
       - traefik.enable=true
-      - traefik.http.routers.minio.tls=true
-      - traefik.http.routers.minio.tls.certresolver=letsencrypt
-      - traefik.http.routers.minio.entrypoints=https
-      - traefik.http.routers.minio.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.storage.tls=true
+      - traefik.http.routers.storage.tls.certresolver=letsencrypt
+      - traefik.http.routers.storage.entrypoints=https
+      - traefik.http.routers.storage.rule=Host(`${DOMAIN}`)
     networks:
       - proxy
 
