@@ -7,20 +7,21 @@ services:
     container_name: service-registry
     restart: unless-stopped
     volumes:
-      - ${GLOBAL_STORAGE}/registry:/data
+      - ${GLOBAL_STORAGE}/registry/data:/data
+    networks:
+      - proxy
+      - registry-net
+    environment:
+      - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
     labels:
       - traefik.enable=true
+      # Routers
       - traefik.http.routers.registry.tls=true
       - traefik.http.routers.registry.tls.certresolver=letsencrypt
       - traefik.http.routers.registry.entrypoints=https
       - traefik.http.routers.registry.rule=Host(`${DOMAIN}`)
-    environment:
-      - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
-    networks:
-      - proxy
-      - registry-net
-    volumes:
-      - ${GLOBAL_STORAGE}/registry/data:/data
+      # Services
+      - traefik.http.services.ctc.loadbalancer.server.port=443
 
 networks:
   proxy:

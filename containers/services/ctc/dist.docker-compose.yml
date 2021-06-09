@@ -6,14 +6,17 @@ services:
     container_name: service-ctc
     image: alexpdr/ctc:latest
     restart: unless-stopped
+    networks:
+      - proxy
     labels:
       - traefik.enable=true
+      # Routers
       - traefik.http.routers.ctc.tls=true
       - traefik.http.routers.ctc.tls.certresolver=letsencrypt
       - traefik.http.routers.ctc.entrypoints=https
       - traefik.http.routers.ctc.rule=Host(`${DOMAIN}`)
-    networks:
-      - proxy
+      # Services
+      - traefik.http.services.ctc.loadbalancer.server.port=443
 
 networks:
   proxy:

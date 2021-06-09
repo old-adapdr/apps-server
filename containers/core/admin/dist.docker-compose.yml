@@ -13,6 +13,7 @@ services:
     - proxy
     labels:
       - traefik.enable=true
+      # Routers
       - traefik.http.routers.admin.tls=true
       - traefik.http.routers.admin.tls.certresolver=letsencrypt
       - traefik.http.routers.admin.entrypoints=https

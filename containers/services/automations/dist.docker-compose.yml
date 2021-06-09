@@ -8,6 +8,13 @@ services:
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/automations:/home/node/.n8n
+    networks:
+      - proxy
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${USERNAME}
+      - N8N_BASIC_AUTH_PASSWORD=${PASSWORD} 
+      - WEBHOOK_TUNNEL_URL=https://${DOMAIN}
     labels:
       - traefik.enable=true
       # Routers
@@ -24,13 +31,8 @@ services:
       - traefik.http.middlewares.automations.headers.SSLHost=${DOMAIN}
       - traefik.http.middlewares.automations.headers.STSIncludeSubdomains=true
       - traefik.http.middlewares.automations.headers.STSPreload=true
-    environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=${USERNAME}
-      - N8N_BASIC_AUTH_PASSWORD=${PASSWORD} 
-      - WEBHOOK_TUNNEL_URL=https://${DOMAIN}
-    networks:
-      - proxy
+      # Services
+      - traefik.http.services.automations.loadbalancer.server.port=443
 
 networks:
   proxy:
