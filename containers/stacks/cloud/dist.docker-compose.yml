@@ -37,7 +37,7 @@ services:
       - ${GLOBAL_STORAGE}/cloud/html:/var/www/html
     networks:
       - proxy
-      - nextcloud-net
+      - cloud-net
     environment:
       - APACHE_DISABLE_REWRITE_IP=1
       - TRUSTED_PROXIES=${TRUSTED_PROXIES}
