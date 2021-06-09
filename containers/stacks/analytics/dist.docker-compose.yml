@@ -9,13 +9,13 @@ services:
     command: --max-allowed-packet=64MB
     volumes:
       - ${GLOBAL_STORAGE}/analytics/mysql:/var/lib/mysql
+    networks:
+      - analytics-net
     environment:
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
-    networks:
-      - analytics-net
     labels:
       - traefik.enable=false
 
@@ -25,28 +25,31 @@ services:
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/analytics/main:/var/www/html
+    networks:
+      - analytics-net
+      - proxy
     links:
       - analytics-db
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.analytics.tls=true
-      - traefik.http.routers.analytics.tls.certresolver=letsencrypt
-      - traefik.http.routers.analytics.entrypoints=https
-      - traefik.http.routers.analytics.rule=Host(`${DOMAIN}`)
+    depends_on: 
+      - analytics-db
     environment:
       - MATOMO_DATABASE_HOST=analytics-db
       - MATOMO_DATABASE_DBNAME=${DB_NAME}
       - MATOMO_DATABASE_USERNAME=${DB_USER}
       - MATOMO_DATABASE_PASSWORD=${DB_PASS}
-    networks:
-      - analytics-net
-      - proxy
-    depends_on: 
-      - analytics-db
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.analytics.tls=true
+      - traefik.http.routers.analytics.tls.certresolver=letsencrypt
+      - traefik.http.routers.analytics.entrypoints=https
+      - traefik.http.routers.analytics.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.analytics.loadbalancer.server.port=80
 
 networks:
-  proxy:
-    external: true
   analytics-net:
     name: analytics-net
     external: false
+  proxy:
+    external: true
