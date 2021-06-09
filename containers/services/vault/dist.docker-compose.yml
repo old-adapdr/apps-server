@@ -8,16 +8,16 @@ services:
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/bitwarden:/data
+    networks:
+      - proxy
+    environment:
+    - SIGNUPS_ALLOWED=${SIGNUPS}
     labels:
       - traefik.enable=true
       - traefik.http.routers.vault.tls=true
       - traefik.http.routers.vault.tls.certresolver=letsencrypt
       - traefik.http.routers.vault.entrypoints=https
       - traefik.http.routers.vault.rule=Host(`${DOMAIN}`)
-    environment:
-      - SIGNUPS_ALLOWED=${SIGNUPS}
-    networks:
-      - proxy
 
 networks:
   proxy:
