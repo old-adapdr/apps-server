@@ -29,8 +29,8 @@ services:
       - traefik.http.routers.gateway-https.entrypoints=https
       - traefik.http.routers.gateway-https.rule=Host(`${DOMAIN}`)
       # Services
-      - traefik.http.services.gateway-http.server.port=80
-      - traefik.http.services.gateway-https.server.port=443
+      - traefik.http.services.gateway-http.loadbalancer.server.port=80
+      - traefik.http.services.gateway-https.loadbalancer.server.port=443
     networks:
       - proxy
 
