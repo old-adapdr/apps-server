@@ -8,13 +8,13 @@ services:
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/cloud/mysql:/var/lib/mysql
+    networks:
+      - cloud-net
     environment:
       - MYSQL_DATABASE=cloud
       - MYSQL_USER=cloud
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
-    networks:
-      - cloud-net
     labels:
       - traefik.enable=false
 
@@ -35,6 +35,9 @@ services:
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/cloud/html:/var/www/html
+    networks:
+      - proxy
+      - nextcloud-net
     environment:
       - APACHE_DISABLE_REWRITE_IP=1
       - TRUSTED_PROXIES=${TRUSTED_PROXIES}
@@ -44,6 +47,9 @@ services:
       - MYSQL_PASSWORD=${DB_PASS}
       - REDIS_HOST=cloud-cache
     links:
+      - cloud-db
+      - cloud-cache
+    depends_on:
       - cloud-db
       - cloud-cache
     labels:
@@ -66,12 +72,6 @@ services:
       - "traefik.http.middlewares.cloud-caldav.redirectregex.replacement=https://$${1}/remote.php/dav/"
       # Router <-> Middleware
       - traefik.http.routers.cloud.middlewares=cloud,cloud-caldav
-    networks:
-      - proxy
-      - nextcloud-net
-    depends_on:
-      - cloud-db
-      - cloud-cache
 
 networks:
   cloud-net:
