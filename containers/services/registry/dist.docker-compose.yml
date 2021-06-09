@@ -21,7 +21,7 @@ services:
       - traefik.http.routers.registry.entrypoints=https
       - traefik.http.routers.registry.rule=Host(`${DOMAIN}`)
       # Services
-      - traefik.http.services.ctc.loadbalancer.server.port=443
+      - traefik.http.services.ctc.loadbalancer.server.port=5000
 
 networks:
   proxy:
