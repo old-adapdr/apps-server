@@ -11,8 +11,8 @@ services:
     networks:
       - cloud-net
     environment:
-      - MYSQL_DATABASE=cloud
-      - MYSQL_USER=cloud
+      - MYSQL_DATABASE=${DB_DB}
+      - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
     labels:
