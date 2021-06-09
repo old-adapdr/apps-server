@@ -13,6 +13,7 @@ services:
       - DRONE_SERVER_HOST=${DOMAIN_CI}
       - DRONE_SERVER_PROTO=https
       - DRONE_TLS_AUTOCERT=true
+      - DRONE_USER_FILTER==${USERS}
     volumes:
       - ${GLOBAL_STORAGE}/ci/server:/data
     labels:
