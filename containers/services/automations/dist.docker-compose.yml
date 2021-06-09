@@ -32,7 +32,7 @@ services:
       - traefik.http.middlewares.automations.headers.STSIncludeSubdomains=true
       - traefik.http.middlewares.automations.headers.STSPreload=true
       # Services
-      - traefik.http.services.automations.loadbalancer.server.port=443
+      - traefik.http.services.automations.loadbalancer.server.port=5678
 
 networks:
   proxy:
