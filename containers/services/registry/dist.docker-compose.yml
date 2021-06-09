@@ -13,6 +13,7 @@ services:
       - registry-net
     environment:
       - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
+      - REGISTRY_HTTP_SECRET=${SECRET}
     labels:
       - traefik.enable=true
       # Routers
