@@ -1,8 +1,6 @@
 
 version: "3.7"
 
-
-
 services:
   writeups-db:
     image: mariadb:latest
@@ -10,13 +8,13 @@ services:
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/writeups/mysql:/var/lib/mysql
+    networks:
+      - writeups-net
     environment:
       - MYSQL_DATABASE=${DB_DB}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
-    networks:
-      - writeups-net
     labels:
       - traefik.enable=false
 
@@ -26,6 +24,13 @@ services:
     restart: unless-stopped
     volumes:
       - ${GLOBAL_STORAGE}/writeups/main:/var/lib/ghost/content
+    networks:
+      - proxy
+      - writeups-net
+    links:
+      - writeups-db
+    depends_on:
+      - writeups-db
     environment:
       - url=https://${DOMAIN}
       - database__client=mysql
@@ -33,20 +38,16 @@ services:
       - database__connection__database=${DB_DB}
       - database__connection__user=${DB_USER}
       - database__connection__password=${DB_PASS}
-    links:
-      - writeups-db
     labels:
       - traefik.enable=true
+      # Routers
       - traefik.http.routers.writeups.tls=true
       - traefik.http.routers.writeups.tls.certresolver=letsencrypt
       - traefik.http.routers.writeups.entrypoints=https
       - traefik.http.routers.writeups.rule=Host(`${DOMAIN}`)
-      - traefik.port=2368
-    networks:
-      - proxy
-      - writeups-net
-    depends_on:
-      - writeups-db
+      # - traefik.port=2368
+      # Services
+      - traefik.http.services.writeups.loadbalancer.server.port=80
 
 networks:
   writeups-net:
