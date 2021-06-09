@@ -72,6 +72,8 @@ services:
       - "traefik.http.middlewares.cloud-caldav.redirectregex.replacement=https://$${1}/remote.php/dav/"
       # Router <-> Middleware
       - traefik.http.routers.cloud.middlewares=cloud,cloud-caldav
+      # Services
+      - traefik.http.services.cloud.loadbalancer.server.port=80
 
 networks:
   cloud-net:
