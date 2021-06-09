@@ -18,6 +18,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./config.yaml:/etc/traefik/traefik.yaml
       - ${GLOBAL_STORAGE}/ssl/acme.json:/etc/traefik/acme.json
+    networks:
+    - proxy
     labels:
       # HTTP Routers
       - traefik.http.routers.gateway-http.service=api@internal
@@ -31,8 +33,6 @@ services:
       # Services
       - traefik.http.services.gateway-http.loadbalancer.server.port=80
       - traefik.http.services.gateway-https.loadbalancer.server.port=443
-    networks:
-      - proxy
 
 networks:
   proxy:

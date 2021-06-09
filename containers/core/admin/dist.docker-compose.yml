@@ -9,6 +9,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${GLOBAL_STORAGE}/portainer:/data
+    networks:
+    - proxy
     labels:
       - traefik.enable=true
       - traefik.http.routers.admin.tls=true
@@ -16,8 +18,8 @@ services:
       - traefik.http.routers.admin.entrypoints=https
       - traefik.http.routers.admin.rule=Host(`${DOMAIN}`)
       - traefik.http.services.admin.loadbalancer.server.port=9000
-    networks:
-      - proxy
+      # Services
+      - traefik.https.services.admin.loadbalancer.server.port=443
 
 networks:
   proxy:
