@@ -14,10 +14,13 @@ services:
     - SIGNUPS_ALLOWED=${SIGNUPS}
     labels:
       - traefik.enable=true
+      # Routers
       - traefik.http.routers.vault.tls=true
       - traefik.http.routers.vault.tls.certresolver=letsencrypt
       - traefik.http.routers.vault.entrypoints=https
       - traefik.http.routers.vault.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.storage.loadbalancer.server.port=80
 
 networks:
   proxy:
