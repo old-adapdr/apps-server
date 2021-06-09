@@ -45,7 +45,6 @@ services:
       - traefik.http.routers.writeups.tls.certresolver=letsencrypt
       - traefik.http.routers.writeups.entrypoints=https
       - traefik.http.routers.writeups.rule=Host(`${DOMAIN}`)
-      # - traefik.port=2368
       # Services
       - traefik.http.services.writeups.loadbalancer.server.port=80
 
