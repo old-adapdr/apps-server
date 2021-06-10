@@ -29,6 +29,12 @@ The templates are grouped into three types:
 - `writeups` | `ghost`: Open-source publication tool and wordpress alternative
 - `analytics` | `matomo`: Open-source GDPR compliant analytics platform
 
+**W.I.P.**
+- `deploy`: A generalized way to auto-deploy new verified updates (Either via script alone or together with TerraForm)
+- `backups`: A generalized way to backup and manage the system
+- `logs & metrics`: A generalized way to view and manage logs (Prometheus)
+- `security`: A generalized way to scan the deployed VLANs and services for malicious activity. (TemplarBit?)
+
 
 ## Setup
 <img src="https://images.unsplash.com/photo-1595776613215-fe04b78de7d0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" width="600">
