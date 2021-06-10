@@ -58,7 +58,7 @@ The templates are grouped into three types:
 The gateway detects and auto-adds new services as they're deployed so it should be deployed first with either option!
 
 **Automatic deployment**
-New and improved auto-deploy to be added in the future =)
+- New and improved auto-deploy to be added in the future =)
 <!-- 1. Read `deploy.py` to see what it does
 2. Setup with `python3 deploy.py`
 3. Deploy with `python3 deploy.py --ARG`, args=["core", "services", "stacks", "all"] -->
