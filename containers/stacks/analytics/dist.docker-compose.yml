@@ -1,0 +1,55 @@
+
+version: "3.7"
+
+services:
+  analytics-db:
+    container_name: stack-analytics-db
+    image: mariadb:latest
+    restart: unless-stopped
+    command: --max-allowed-packet=64MB
+    volumes:
+      - ${GLOBAL_STORAGE}/analytics/mysql:/var/lib/mysql
+    networks:
+      - analytics-net
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+    labels:
+      - traefik.enable=false
+
+  analytics:
+    image: matomo:latest
+    container_name: stack-analytics
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/analytics/main:/var/www/html
+    networks:
+      - analytics-net
+      - proxy
+    links:
+      - analytics-db
+    depends_on: 
+      - analytics-db
+    environment:
+      - MATOMO_DATABASE_HOST=analytics-db
+      - MATOMO_DATABASE_DBNAME=${DB_NAME}
+      - MATOMO_DATABASE_USERNAME=${DB_USER}
+      - MATOMO_DATABASE_PASSWORD=${DB_PASS}
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.analytics.tls=true
+      - traefik.http.routers.analytics.tls.certresolver=letsencrypt
+      - traefik.http.routers.analytics.entrypoints=https
+      - traefik.http.routers.analytics.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.analytics.loadbalancer.server.port=80
+
+networks:
+  analytics-net:
+    name: analytics-net
+    external: false
+  proxy:
+    external: true

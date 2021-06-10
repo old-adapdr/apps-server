@@ -1,0 +1,39 @@
+
+version: "3.7"
+
+services:
+  automations:
+    image: n8nio/n8n:latest
+    container_name: service-automations
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/automations:/home/node/.n8n
+    networks:
+      - proxy
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${USERNAME}
+      - N8N_BASIC_AUTH_PASSWORD=${PASSWORD} 
+      - WEBHOOK_TUNNEL_URL=https://${DOMAIN}
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.automations.tls=true
+      - traefik.http.routers.automations.tls.certresolver=letsencrypt
+      - traefik.http.routers.automations.entrypoints=https
+      - traefik.http.routers.automations.rule=Host(`${DOMAIN}`)
+      # Middleware
+      - traefik.http.middlewares.automations.headers.SSLRedirect=true
+      - traefik.http.middlewares.automations.headers.STSSeconds=315360000
+      - traefik.http.middlewares.automations.headers.browserXSSFilter=true
+      - traefik.http.middlewares.automations.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.automations.headers.forceSTSHeader=true
+      - traefik.http.middlewares.automations.headers.SSLHost=${DOMAIN}
+      - traefik.http.middlewares.automations.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.automations.headers.STSPreload=true
+      # Services
+      - traefik.http.services.automations.loadbalancer.server.port=5678
+
+networks:
+  proxy:
+    external: true

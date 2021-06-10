@@ -1,0 +1,23 @@
+
+version: "3.7"
+
+services:
+  ctc:
+    container_name: service-ctc
+    image: alexpdr/ctc:latest
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.ctc.tls=true
+      - traefik.http.routers.ctc.tls.certresolver=letsencrypt
+      - traefik.http.routers.ctc.entrypoints=https
+      - traefik.http.routers.ctc.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.ctc.loadbalancer.server.port=80
+
+networks:
+  proxy:
+    external: true

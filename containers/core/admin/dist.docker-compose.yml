@@ -1,0 +1,26 @@
+
+version: "3.7"
+
+services:
+  admin:
+    image: portainer/portainer-ce:latest
+    container_name: core-admin
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${GLOBAL_STORAGE}/portainer:/data
+    networks:
+    - proxy
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.admin.tls=true
+      - traefik.http.routers.admin.tls.certresolver=letsencrypt
+      - traefik.http.routers.admin.entrypoints=https
+      - traefik.http.routers.admin.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.admin.loadbalancer.server.port=9000
+
+networks:
+  proxy:
+    external: true

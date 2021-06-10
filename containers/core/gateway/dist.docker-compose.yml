@@ -1,0 +1,39 @@
+
+version: "3.7"
+
+services:
+  gateway:
+    image: traefik:v2.4
+    container_name: core-gateway
+    restart: unless-stopped
+    command: --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
+    environment: 
+      - TRAEFIK_PILOT_TOKEN=${PILOT_TOKEN}
+      - TRAEFIK_LOG_FILEPATH=${GLOBAL_STORAGE}/traefik/traefik.log
+      - TRAEFIK_ACCESSLOG_FILEPATH=${GLOBAL_STORAGE}/traefik/access.log
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config.yaml:/etc/traefik/traefik.yaml
+      - ${GLOBAL_STORAGE}/ssl/acme.json:/etc/traefik/acme.json
+    networks:
+    - proxy
+    labels:
+      # HTTP Routers
+      - traefik.http.routers.gateway-http.service=api@internal
+      - traefik.http.routers.gateway-http.entrypoints=http
+      - traefik.http.routers.gateway-http.rule=Host(`${DOMAIN}`)
+      # HTTPS Routers
+      - traefik.http.routers.gateway-https.tls=true
+      - traefik.http.routers.gateway-https.service=api@internal
+      - traefik.http.routers.gateway-https.entrypoints=https
+      - traefik.http.routers.gateway-https.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.gateway-http.loadbalancer.server.port=80
+      - traefik.http.services.gateway-https.loadbalancer.server.port=443
+
+networks:
+  proxy:
+    name: proxy

@@ -1,0 +1,375 @@
+version: '3.7'
+
+services:
+  # Main
+  appwrite:
+    image: appwrite/appwrite:0.8.0
+    container_name: stack-appwrite
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/config:/storage/config:rw
+      - ${GLOBAL_STORAGE}/appwrite/functions:/storage/functions:rw
+      - ${GLOBAL_STORAGE}/appwrite/uploads:/storage/uploads:rw
+      - ${GLOBAL_STORAGE}/appwrite/certs:/storage/certificates:rw
+      - ${GLOBAL_STORAGE}/appwrite/functions:/storage/cache:rw
+    networks:
+      - proxy
+      - appwrite-net
+    depends_on:
+      - appwrite-db
+      - appwrite-cache
+      - appwrite-logs
+    environment:
+      - _APP_ENV
+      - _APP_CONSOLE_WHITELIST_EMAILS
+      - _APP_CONSOLE_WHITELIST_IPS
+      - _APP_SYSTEM_EMAIL_NAME=${EMAIL_NAME}
+      - _APP_SYSTEM_EMAIL_ADDRESS=${EMAIL_TEAM}
+      - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS=${EMAIL_WEBMASTER}
+      - _APP_SYSTEM_RESPONSE_FORMAT
+      - _APP_OPTIONS_ABUSE
+      - _APP_OPTIONS_FORCE_HTTPS
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DOMAIN=${DOMAIN}
+      - _APP_DOMAIN_TARGET
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_DB_HOST=appwrite-db
+      - _APP_DB_PORT=3306
+      - _APP_DB_SCHEMA=appwrite
+      - _APP_DB_USER=${DB_USER}
+      - _APP_DB_PASS=${DB_PASS}
+      - _APP_SMTP_HOST=${SMTP_HOST}
+      - _APP_SMTP_PORT=${SMTP_PORT}
+      - _APP_SMTP_SECURE=${SMTP_SECURE}
+      - _APP_SMTP_USERNAME=${SMTP_USER}
+      - _APP_SMTP_PASSWORD=${SMTP_PASS}
+      - _APP_USAGE_STATS
+      - _APP_INFLUXDB_HOST=appwrite-logs
+      - _APP_INFLUXDB_PORT=8086
+      - _APP_STORAGE_LIMIT
+      - _APP_FUNCTIONS_TIMEOUT
+      - _APP_FUNCTIONS_CONTAINERS
+      - _APP_FUNCTIONS_CPUS
+      - _APP_FUNCTIONS_MEMORY
+      - _APP_FUNCTIONS_MEMORY_SWAP
+      - _APP_FUNCTIONS_ENVS
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.appwrite.tls=true
+      - traefik.http.routers.appwrite.tls.certresolver=letsencrypt
+      - traefik.http.routers.appwrite.entrypoints=https
+      - traefik.http.routers.appwrite.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.appwrite.loadbalancer.server.port=80
+
+  # Workers
+  appwrite-usage:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: worker-usage
+    container_name: stack-appwrite-usage
+    restart: unless-stopped
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+      - appwrite-logs
+    environment:
+      - _APP_ENV
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_STATSD_HOST=appwrite-metrics
+      - _APP_STATSD_PORT=8125
+    labels:
+      - traefik.enable=false
+
+  appwrite-audits:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: worker-audits
+    container_name: stack-appwrite-audits
+    restart: unless-stopped
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+      - appwrite-db
+    environment:
+      - _APP_ENV
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_DB_HOST=appwrite-db
+      - _APP_DB_PORT=3306
+      - _APP_DB_SCHEMA=appwrite
+      - _APP_DB_USER=${DB_USER}
+      - _APP_DB_PASS=${DB_PASS}
+    labels:
+      - traefik.enable=false
+
+  appwrite-webhooks:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: worker-webhooks
+    container_name: stack-appwrite-webhooks
+    restart: unless-stopped
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+      - appwrite-db
+    environment:
+      - _APP_ENV
+      - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS=${EMAIL_WEBMASTER}
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_DB_HOST=appwrite-db
+      - _APP_DB_PORT=3306
+      - _APP_DB_SCHEMA=appwrite
+      - _APP_DB_USER=${DB_USER}
+      - _APP_DB_PASS=${DB_PASS}
+    labels:
+      - traefik.enable=false
+
+  appwrite-tasks:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: worker-tasks
+    container_name: stack-appwrite-tasks
+    restart: unless-stopped
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+      - appwrite-db
+    environment:
+      - _APP_ENV
+      - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS=${EMAIL_WEBMASTER}
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_DB_HOST=appwrite-db
+      - _APP_DB_PORT=3306
+      - _APP_DB_SCHEMA=appwrite
+      - _APP_DB_USER=${DB_USER}
+      - _APP_DB_PASS=${DB_PASS}
+    labels:
+      - traefik.enable=false
+
+  appwrite-deletes:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: worker-deletes
+    container_name: stack-appwrite-deletes
+    restart: unless-stopped
+    volumes: 
+      - ${GLOBAL_STORAGE}/appwrite/uploads:/storage/uploads:rw
+      - ${GLOBAL_STORAGE}/appwrite/deletes:/storage/cache:rw
+      - ${GLOBAL_STORAGE}/appwrite/certs:/storage/certificates:rw
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+      - appwrite-db
+    environment:
+      - _APP_ENV
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_DB_HOST=appwrite-db
+      - _APP_DB_PORT=3306
+      - _APP_DB_SCHEMA=appwrite
+      - _APP_DB_USER=${DB_USER}
+      - _APP_DB_PASS=${DB_PASS}
+    labels:
+      - traefik.enable=false
+
+  appwrite-certs:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: worker-certificates
+    container_name: stack-appwrite-certs
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/config:/storage/config:rw
+      - ${GLOBAL_STORAGE}/appwrite/certs:/storage/certificates:rw
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+      - appwrite-db
+    environment:
+      - _APP_ENV
+      - _APP_SYSTEM_SECURITY_EMAIL_ADDRESS=${EMAIL_WEBMASTER}
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_DOMAIN_TARGET
+      - _APP_DB_HOST=appwrite-db
+      - _APP_DB_PORT=3306
+      - _APP_DB_SCHEMA=appwrite
+      - _APP_DB_USER=${DB_USER}
+      - _APP_DB_PASS=${DB_PASS}
+    labels:
+      - traefik.enable=false
+
+  appwrite-functions:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: worker-functions
+    container_name: stack-appwrite-functions
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/functions:/storage/functions:rw
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp:/tmp:rw
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+      - appwrite-db
+    environment:
+      - _APP_ENV
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_DB_HOST=appwrite-db
+      - _APP_DB_PORT=3306
+      - _APP_DB_SCHEMA=appwrite
+      - _APP_DB_USER=${DB_USER}
+      - _APP_DB_PASS=${DB_PASS}
+      - _APP_FUNCTIONS_TIMEOUT
+      - _APP_FUNCTIONS_CONTAINERS
+      - _APP_FUNCTIONS_CPUS
+      - _APP_FUNCTIONS_MEMORY
+      - _APP_FUNCTIONS_MEMORY_SWAP
+      - _APP_USAGE_STATS
+    labels:
+      - traefik.enable=false
+
+  appwrite-mails:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: worker-mails
+    container_name: stack-appwrite-mails
+    restart: unless-stopped
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+    environment:
+      - _APP_ENV
+      - _APP_SYSTEM_EMAIL_NAME=${EMAIL_NAME}
+      - _APP_SYSTEM_EMAIL_ADDRESS=${EMAIL_TEAM}
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_SMTP_HOST=${SMTP_HOST}
+      - _APP_SMTP_PORT=${SMTP_PORT}
+      - _APP_SMTP_SECURE=${SMTP_SECURE}
+      - _APP_SMTP_USERNAME=${SMTP_USER}
+      - _APP_SMTP_PASSWORD=${SMTP_PASS}
+    labels:
+      - traefik.enable=false
+
+  # Internal
+  appwrite-maintenance:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: maintenance
+    container_name: stack-appwrite-maintenance
+    restart: unless-stopped
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+    environment:
+      - _APP_ENV
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+      - _APP_MAINTENANCE_INTERVAL
+      - _APP_MAINTENANCE_RETENTION_EXECUTION
+      - _APP_MAINTENANCE_RETENTION_ABUSE
+      - _APP_MAINTENANCE_RETENTION_AUDIT
+    labels:
+      - traefik.enable=false
+
+  appwrite-schedule:
+    image: appwrite/appwrite:0.8.0
+    entrypoint: schedule
+    container_name: stack-appwrite-schedule
+    restart: unless-stopped
+    networks:
+      - appwrite-net
+    depends_on:
+      - appwrite-cache
+    environment:
+      - _APP_ENV
+      - _APP_REDIS_HOST=appwrite-cache
+      - _APP_REDIS_PORT=6379
+      # - _APP_REDIS_USER=${DB_USER}
+      # - _APP_REDIS_PASS=${CACHE_PASS}
+    labels:
+      - traefik.enable=false
+
+  # Databases
+  appwrite-db:
+    image: appwrite/mariadb:1.2.0
+    container_name: stack-appwrite-db
+    restart: unless-stopped
+    command: 'mysqld --innodb-flush-method=fsync'
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/db:/var/lib/mysql:rw
+    networks:
+      - appwrite-net
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - MYSQL_DATABASE=appwrite
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+    labels:
+      - traefik.enable=false
+
+  appwrite-cache:
+    image: redis:6.0-alpine3.12
+    container_name: stack-appwrite-cache
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/cache:/data:rw
+    networks:
+      - appwrite-net
+    labels:
+      - traefik.enable=false
+
+  appwrite-logs:
+    image: influxdb:1.8-alpine
+    container_name: stack-appwrite-logs
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/appwrite/logs:/var/lib/influxdb:rw
+    networks:
+      - appwrite-net
+    labels:
+      - traefik.enable=false
+
+  appwrite-metrics:
+    image: appwrite/telegraf:1.0.0
+    container_name: stack-appwrite-metrics
+    restart: unless-stopped
+    networks:
+      - appwrite-net
+    labels:
+      - traefik.enable=false
+
+networks:
+  appwrite-net:
+    name: appwrite-net
+    external: false
+  proxy:
+    external: true
