@@ -7,7 +7,7 @@ services:
     container_name: service-vault
     restart: unless-stopped
     volumes:
-      - ${GLOBAL_STORAGE}/bitwarden:/data
+      - ${GLOBAL_STORAGE}/vault:/data
     networks:
       - proxy
     environment:
