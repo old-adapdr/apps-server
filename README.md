@@ -58,9 +58,10 @@ The templates are grouped into three types:
 The gateway detects and auto-adds new services as they're deployed so it should be deployed first with either option!
 
 **Automatic deployment**
-1. Read `deploy.py` to see what it does
+New and improved auto-deploy to be added in the future =)
+<!-- 1. Read `deploy.py` to see what it does
 2. Setup with `python3 deploy.py`
-3. Deploy with `python3 deploy.py --ARG`, args=["core", "services", "stacks", "all"]
+3. Deploy with `python3 deploy.py --ARG`, args=["core", "services", "stacks", "all"] -->
 
 **Manual deployment**
 1. Copy `dist.env` and `dist.docker-compose.yml` files for core with your preferred configuration
