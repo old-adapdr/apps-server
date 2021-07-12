@@ -39,8 +39,12 @@ services:
       - proxy
       - cloud-net
     environment:
-      - APACHE_DISABLE_REWRITE_IP=1
+      # Required for redirects
+      - OVERWRITEHOST=${DOMAIN}
+      - OVERWRITEPROTOCOL=https
       - TRUSTED_PROXIES=${TRUSTED_PROXIES}
+      - APACHE_DISABLE_REWRITE_IP=1
+      # Database variables
       - MYSQL_HOST=cloud-db
       - MYSQL_DATABASE=${DB_DB}
       - MYSQL_USER=${DB_USER}
