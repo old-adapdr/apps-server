@@ -6,6 +6,7 @@ services:
     container_name: stack-cloud-db
     image: mariadb:latest
     restart: unless-stopped
+    command: --innodb-read-only-compressed=OFF
     volumes:
       - ${GLOBAL_STORAGE}/cloud/mysql:/var/lib/mysql
     networks:
