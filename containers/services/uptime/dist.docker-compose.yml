@@ -1,0 +1,25 @@
+
+version: "3.7"
+
+services:
+  uptime:
+    container_name: service-uptime
+    image: louislam/uptime:latest
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - ${GLOBAL_STORAGE}/uptime/data:/data
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.uptime.tls=true
+      - traefik.http.routers.uptime.tls.certresolver=letsencrypt
+      - traefik.http.routers.uptime.entrypoints=https
+      - traefik.http.routers.uptime.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.uptime.loadbalancer.server.port=80
+
+networks:
+  proxy:
+    external: true
