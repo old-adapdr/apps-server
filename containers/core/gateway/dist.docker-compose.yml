@@ -8,7 +8,6 @@ services:
     restart: unless-stopped
     command: --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
     environment: 
-      - TRAEFIK_PILOT_TOKEN=${PILOT_TOKEN}
       - TRAEFIK_LOG_FILEPATH=${GLOBAL_STORAGE}/traefik/traefik.log
       - TRAEFIK_ACCESSLOG_FILEPATH=${GLOBAL_STORAGE}/traefik/access.log
     ports:
