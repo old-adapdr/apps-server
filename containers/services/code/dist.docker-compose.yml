@@ -9,7 +9,7 @@ services:
     networks:
       - proxy
     volumes:
-      - ${GLOBAL_STORAGE}/code/data:/data
+      - ${GLOBAL_STORAGE}/code/config:/config
     labels:
       - traefik.enable=true
       # Routers
