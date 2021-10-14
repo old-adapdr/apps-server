@@ -13,10 +13,9 @@ services:
       - PGID=$PGID
       - TZ=$TZ
       - PASSWORD=${PASSWORD}
-      - HASHED_PASSWORD=${HASHED_PASSWORD}
-      - SUDO_PASSWORD=${SUDO_PASSWORD}
-      - SUDO_PASSWORD_HASH=${SUDO_PASSWORD_HASH}
-      - PROXY_DOMAIN=${DOMAIN}
+#      - HASHED_PASSWORD=${HASHED_PASSWORD}
+#      - SUDO_PASSWORD=${SUDO_PASSWORD}
+#      - SUDO_PASSWORD_HASH=${SUDO_PASSWORD_HASH}
     volumes:
       - ${GLOBAL_STORAGE}/code:/config
       - ./config.yaml:/config/.config/code-server/config.yaml
