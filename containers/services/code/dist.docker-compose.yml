@@ -12,13 +12,14 @@ services:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
-      - PASSWORD=$PASSWORD
-      - HASHED_PASSWORD=$HASHED_PASSWORD
-      - SUDO_PASSWORD=$SUDO_PASSWORD
-      - SUDO_PASSWORD_HASH=$SUDO_PASSWORD_HASH
-      - PROXY_DOMAIN=$PROXY_DOMAIN
+      - PASSWORD=${PASSWORD}
+      - HASHED_PASSWORD=${HASHED_PASSWORD}
+      - SUDO_PASSWORD=${SUDO_PASSWORD}
+      - SUDO_PASSWORD_HASH=${SUDO_PASSWORD_HASH}
+      - PROXY_DOMAIN=${DOMAIN}
     volumes:
       - ${GLOBAL_STORAGE}/code:/config
+      - ./config.yaml:/.config/code-server/config.yaml
     labels:
       - traefik.enable=true
       # Routers
