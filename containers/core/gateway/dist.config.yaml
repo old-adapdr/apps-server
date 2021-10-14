@@ -26,3 +26,5 @@ certificatesResolvers:
       storage: /etc/traefik/acme.json
       httpChallenge:
         entryPoint: http
+pilot:
+    token: ""
