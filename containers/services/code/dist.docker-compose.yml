@@ -19,7 +19,7 @@ services:
       - PROXY_DOMAIN=${DOMAIN}
     volumes:
       - ${GLOBAL_STORAGE}/code:/config
-      - ./config.yaml:/.config/code-server/config.yaml
+      - ./config.yaml:/config/.config/code-server/config.yaml
     labels:
       - traefik.enable=true
       # Routers
