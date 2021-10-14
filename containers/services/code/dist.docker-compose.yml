@@ -1,0 +1,35 @@
+
+version: "3.7"
+
+services:
+  code:
+    container_name: service-code
+    image: lscr.io/linuxserver/code-server
+    restart: unless-stopped
+    networks:
+      - proxy
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - PASSWORD=${PASSWORD}
+      - HASHED_PASSWORD=${HASHED_PASSWORD}
+      - SUDO_PASSWORD=${SUDO_PASSWORD}
+      - SUDO_PASSWORD_HASH=${SUDO_PASSWORD_HASH}
+      - PROXY_DOMAIN=${DOMAIN}
+    volumes:
+      - ${GLOBAL_STORAGE}/code:/config
+      - ./config.yaml:/.config/code-server/config.yaml
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.code.tls=true
+      - traefik.http.routers.code.tls.certresolver=letsencrypt
+      - traefik.http.routers.code.entrypoints=https
+      - traefik.http.routers.code.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.code.loadbalancer.server.port=8443
+
+networks:
+  proxy:
+    external: true
