@@ -18,7 +18,6 @@ services:
 #      - SUDO_PASSWORD_HASH=${SUDO_PASSWORD_HASH}
     volumes:
       - ${GLOBAL_STORAGE}/code:/config
-      - ./config.yaml:/config/.config/code-server/config.yaml
     labels:
       - traefik.enable=true
       # Routers
