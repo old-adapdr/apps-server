@@ -1,0 +1,42 @@
+
+version: "2.1"
+
+services:
+  vpn:
+    container_name: service-vpn
+    image: lscr.io/linuxserver/wireguard
+    restart: unless-stopped
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - SERVERURL=${DOMAIN}
+      - SERVERPORT=${SERVER_PORT}
+      - PEERS=${PEERS}
+      - PEERSDNS=${PEERS_DNS}
+      - INTERNAL_SUBNET=${SERVER_SUBNET}
+    networks:
+      - proxy
+    volumes:
+      - ${GLOBAL_STORAGE}/code:/config
+      - /lib/modules:/lib/modules
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.code.tls=true
+      - traefik.http.routers.code.tls.certresolver=letsencrypt
+      - traefik.http.routers.code.entrypoints=https
+      - traefik.http.routers.code.rule=Host(`${DOMAIN}`)
+      # Services
+      - traefik.http.services.code.loadbalancer.server.port=${SERVER_PORT}
+    # Extras
+
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+networks:
+  proxy:
+    external: true
