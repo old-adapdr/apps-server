@@ -1,0 +1,49 @@
+
+version: "3.7"
+
+services:
+  database-records:
+    container_name: service-database-records
+    image: mariadb:latest
+    restart: unless-stopped
+    command: --innodb-read-only-compressed=OFF
+    volumes:
+      - ${GLOBAL_STORAGE}/cloud/mysql:/var/lib/mysql
+    networks:
+      - proxy
+    environment:
+      - MYSQL_DATABASE=${DB_DB}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.cloud.tls=true
+      - traefik.http.routers.cloud.tls.certresolver=letsencrypt
+      - traefik.http.routers.cloud.entrypoints=https
+      - traefik.http.routers.cloud.rule=Host(`${DOMAIN_DB}`)
+      # Services
+      - traefik.http.services.cloud.loadbalancer.server.port=80
+
+  database-cache:
+    image: redis:6-alpine
+    container_name: service-database-records
+    restart: unless-stopped
+    volumes:
+      - ${GLOBAL_STORAGE}/cloud/redis:/data
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      # Routers
+      - traefik.http.routers.cloud.tls=true
+      - traefik.http.routers.cloud.tls.certresolver=letsencrypt
+      - traefik.http.routers.cloud.entrypoints=https
+      - traefik.http.routers.cloud.rule=Host(`${DOMAIN_CACHE}`)
+      # Services
+      - traefik.http.services.cloud.loadbalancer.server.port=80
+
+networks:
+  proxy:
+    external: true
