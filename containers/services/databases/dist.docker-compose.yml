@@ -24,7 +24,7 @@ services:
       - traefik.http.routers.database-mariadb.entrypoints=https
       - traefik.http.routers.database-mariadb.rule=Host(`${DOMAIN_DB}`)
       # Services
-      - traefik.http.services.database-mariadb.loadbalancer.server.port=80
+      - traefik.http.services.database-mariadb.loadbalancer.server.port=3306
 
   databases-redis:
     image: redis:6-alpine
@@ -42,7 +42,7 @@ services:
       - traefik.http.routers.databases-redis.entrypoints=https
       - traefik.http.routers.databases-redis.rule=Host(`${DOMAIN_CACHE}`)
       # Services
-      - traefik.http.services.databases-redis.loadbalancer.server.port=80
+      - traefik.http.services.databases-redis.loadbalancer.server.port=6379
 
 networks:
   proxy:
